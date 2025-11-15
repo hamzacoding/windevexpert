@@ -1,0 +1,67 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f8fafc"/>
+  
+  <!-- Browser Window -->
+  <rect x="20" y="40" width="360" height="240" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  
+  <!-- Browser Header -->
+  <rect x="20" y="40" width="360" height="30" rx="8" fill="#64748b"/>
+  <rect x="20" y="62" width="360" height="8" fill="#64748b"/>
+  
+  <!-- Browser Dots -->
+  <circle cx="35" cy="55" r="4" fill="#ef4444"/>
+  <circle cx="50" cy="55" r="4" fill="#f59e0b"/>
+  <circle cx="65" cy="55" r="4" fill="#10b981"/>
+  
+  <!-- URL Bar -->
+  <rect x="90" y="47" width="200" height="16" rx="8" fill="#f1f5f9"/>
+  
+  <!-- Dashboard Content -->
+  <!-- Header -->
+  <rect x="40" y="90" width="320" height="20" fill="#3b82f6"/>
+  <text x="50" y="105" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">Système CRM - Gestion Clients</text>
+  
+  <!-- Stats Cards -->
+  <rect x="40" y="120" width="70" height="40" rx="4" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="45" y="135" font-family="Arial, sans-serif" font-size="8" fill="#1e40af">Clients</text>
+  <text x="45" y="150" font-family="Arial, sans-serif" font-size="14" fill="#1e40af" font-weight="bold">1,247</text>
+  
+  <rect x="120" y="120" width="70" height="40" rx="4" fill="#dcfce7" stroke="#10b981"/>
+  <text x="125" y="135" font-family="Arial, sans-serif" font-size="8" fill="#047857">Ventes</text>
+  <text x="125" y="150" font-family="Arial, sans-serif" font-size="14" fill="#047857" font-weight="bold">€45,230</text>
+  
+  <rect x="200" y="120" width="70" height="40" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="205" y="135" font-family="Arial, sans-serif" font-size="8" fill="#92400e">Leads</text>
+  <text x="205" y="150" font-family="Arial, sans-serif" font-size="14" fill="#92400e" font-weight="bold">89</text>
+  
+  <rect x="280" y="120" width="70" height="40" rx="4" fill="#fce7f3" stroke="#ec4899"/>
+  <text x="285" y="135" font-family="Arial, sans-serif" font-size="8" fill="#be185d">Tâches</text>
+  <text x="285" y="150" font-family="Arial, sans-serif" font-size="14" fill="#be185d" font-weight="bold">23</text>
+  
+  <!-- Table Header -->
+  <rect x="40" y="180" width="320" height="20" fill="#f1f5f9"/>
+  <text x="45" y="195" font-family="Arial, sans-serif" font-size="10" fill="#374151" font-weight="bold">Clients Récents</text>
+  
+  <!-- Table Rows -->
+  <rect x="40" y="200" width="320" height="15" fill="#ffffff"/>
+  <text x="45" y="212" font-family="Arial, sans-serif" font-size="9" fill="#374151">Ahmed Benali</text>
+  <text x="200" y="212" font-family="Arial, sans-serif" font-size="9" fill="#374151">ahmed@email.com</text>
+  <circle cx="320" cy="207" r="4" fill="#10b981"/>
+  
+  <rect x="40" y="215" width="320" height="15" fill="#f9fafb"/>
+  <text x="45" y="227" font-family="Arial, sans-serif" font-size="9" fill="#374151">Fatima Khelil</text>
+  <text x="200" y="227" font-family="Arial, sans-serif" font-size="9" fill="#374151">fatima@email.com</text>
+  <circle cx="320" cy="222" r="4" fill="#f59e0b"/>
+  
+  <rect x="40" y="230" width="320" height="15" fill="#ffffff"/>
+  <text x="45" y="242" font-family="Arial, sans-serif" font-size="9" fill="#374151">Mohamed Saidi</text>
+  <text x="200" y="242" font-family="Arial, sans-serif" font-size="9" fill="#374151">mohamed@email.com</text>
+  <circle cx="320" cy="237" r="4" fill="#ef4444"/>
+  
+  <!-- Chart Area -->
+  <rect x="280" y="180" width="80" height="60" fill="#f8fafc" stroke="#e2e8f0"/>
+  <polyline points="285,230 295,220 305,225 315,210 325,215 335,205 345,200" 
+            fill="none" stroke="#3b82f6" stroke-width="2"/>
+  <text x="285" y="255" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">Évolution CA</text>
+</svg>

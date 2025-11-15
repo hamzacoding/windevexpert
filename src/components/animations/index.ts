@@ -1,0 +1,5 @@
+export { default as FloatingCard } from './FloatingCard'
+export { default as ParallaxSection } from './ParallaxSection'
+export { default as AnimatedBackground } from './AnimatedBackground'
+export { default as ScrollReveal } from './ScrollReveal'
+export { default as PerformanceOptimizer } from './PerformanceOptimizer'

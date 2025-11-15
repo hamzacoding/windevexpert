@@ -1,0 +1,164 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8fafc"/>
+  
+  <!-- Main Container -->
+  <rect x="50" y="50" width="700" height="500" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  
+  <!-- Header -->
+  <rect x="50" y="50" width="700" height="80" rx="12" fill="#3b82f6"/>
+  <rect x="50" y="122" width="700" height="8" fill="#3b82f6"/>
+  
+  <!-- Logo and Title -->
+  <text x="80" y="85" font-family="Arial, sans-serif" font-size="24" fill="white" font-weight="bold">UI Components Library</text>
+  <text x="80" y="105" font-family="Arial, sans-serif" font-size="14" fill="#bfdbfe">Modern React Components for Your Next Project</text>
+  
+  <!-- Navigation -->
+  <text x="500" y="85" font-family="Arial, sans-serif" font-size="14" fill="#bfdbfe">Components</text>
+  <text x="590" y="85" font-family="Arial, sans-serif" font-size="14" fill="#bfdbfe">Examples</text>
+  <text x="660" y="85" font-family="Arial, sans-serif" font-size="14" fill="#bfdbfe">Docs</text>
+  
+  <!-- Search Bar -->
+  <rect x="500" y="95" width="200" height="25" rx="12" fill="#1e40af"/>
+  <text x="510" y="110" font-family="Arial, sans-serif" font-size="11" fill="#bfdbfe">Search components...</text>
+  <text x="680" y="110" font-family="Arial, sans-serif" font-size="12" fill="#bfdbfe">🔍</text>
+  
+  <!-- Component Grid -->
+  <text x="80" y="170" font-family="Arial, sans-serif" font-size="18" fill="#1f2937" font-weight="bold">Featured Components</text>
+  
+  <!-- Button Component -->
+  <rect x="80" y="190" width="200" height="120" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+  <rect x="90" y="200" width="180" height="60" rx="4" fill="#f8fafc"/>
+  
+  <!-- Button Examples -->
+  <rect x="100" y="210" width="60" height="25" rx="6" fill="#3b82f6"/>
+  <text x="120" y="225" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">Primary</text>
+  
+  <rect x="170" y="210" width="60" height="25" rx="6" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="185" y="225" font-family="Arial, sans-serif" font-size="10" fill="#374151" font-weight="bold">Secondary</text>
+  
+  <rect x="100" y="240" width="60" height="25" rx="6" fill="#10b981"/>
+  <text x="120" y="255" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">Success</text>
+  
+  <rect x="170" y="240" width="60" height="25" rx="6" fill="#ef4444"/>
+  <text x="190" y="255" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">Danger</text>
+  
+  <text x="90" y="285" font-family="Arial, sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Button Component</text>
+  <text x="90" y="300" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Customizable buttons with variants</text>
+  
+  <!-- Input Component -->
+  <rect x="300" y="190" width="200" height="120" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+  <rect x="310" y="200" width="180" height="60" rx="4" fill="#f8fafc"/>
+  
+  <!-- Input Examples -->
+  <rect x="320" y="210" width="160" height="20" rx="4" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="325" y="222" font-family="Arial, sans-serif" font-size="9" fill="#9ca3af">Enter your email...</text>
+  
+  <rect x="320" y="235" width="160" height="20" rx="4" fill="#ffffff" stroke="#3b82f6" stroke-width="2"/>
+  <text x="325" y="247" font-family="Arial, sans-serif" font-size="9" fill="#1f2937">ahmed@example.com</text>
+  
+  <text x="310" y="285" font-family="Arial, sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Input Component</text>
+  <text x="310" y="300" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Form inputs with validation</text>
+  
+  <!-- Card Component -->
+  <rect x="520" y="190" width="200" height="120" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+  <rect x="530" y="200" width="180" height="60" rx="4" fill="#f8fafc"/>
+  
+  <!-- Card Example -->
+  <rect x="540" y="210" width="160" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="550" y="225" font-family="Arial, sans-serif" font-size="10" fill="#1f2937" font-weight="bold">Product Card</text>
+  <text x="550" y="240" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">Beautiful card component</text>
+  
+  <text x="530" y="285" font-family="Arial, sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Card Component</text>
+  <text x="530" y="300" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Flexible content containers</text>
+  
+  <!-- Modal Component -->
+  <rect x="80" y="330" width="200" height="120" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+  <rect x="90" y="340" width="180" height="60" rx="4" fill="#f8fafc"/>
+  
+  <!-- Modal Example -->
+  <rect x="100" y="350" width="140" height="30" rx="4" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="110" y="365" font-family="Arial, sans-serif" font-size="9" fill="#1f2937" font-weight="bold">Confirm Action</text>
+  <text x="110" y="375" font-family="Arial, sans-serif" font-size="7" fill="#6b7280">Are you sure?</text>
+  
+  <rect x="110" y="385" width="40" height="15" rx="3" fill="#3b82f6"/>
+  <text x="125" y="394" font-family="Arial, sans-serif" font-size="7" fill="white">Yes</text>
+  
+  <rect x="160" y="385" width="40" height="15" rx="3" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="175" y="394" font-family="Arial, sans-serif" font-size="7" fill="#374151">No</text>
+  
+  <text x="90" y="425" font-family="Arial, sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Modal Component</text>
+  <text x="90" y="440" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Overlay dialogs and popups</text>
+  
+  <!-- Table Component -->
+  <rect x="300" y="330" width="200" height="120" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+  <rect x="310" y="340" width="180" height="60" rx="4" fill="#f8fafc"/>
+  
+  <!-- Table Example -->
+  <rect x="320" y="350" width="160" height="40" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+  
+  <!-- Table Header -->
+  <rect x="320" y="350" width="160" height="12" fill="#f3f4f6"/>
+  <text x="325" y="359" font-family="Arial, sans-serif" font-size="7" fill="#374151" font-weight="bold">Name</text>
+  <text x="375" y="359" font-family="Arial, sans-serif" font-size="7" fill="#374151" font-weight="bold">Status</text>
+  <text x="425" y="359" font-family="Arial, sans-serif" font-size="7" fill="#374151" font-weight="bold">Actions</text>
+  
+  <!-- Table Rows -->
+  <text x="325" y="370" font-family="Arial, sans-serif" font-size="7" fill="#1f2937">Ahmed</text>
+  <rect x="375" y="365" width="25" height="8" rx="4" fill="#dcfce7"/>
+  <text x="380" y="371" font-family="Arial, sans-serif" font-size="6" fill="#166534">Active</text>
+  <text x="425" y="370" font-family="Arial, sans-serif" font-size="7" fill="#3b82f6">Edit</text>
+  
+  <text x="325" y="382" font-family="Arial, sans-serif" font-size="7" fill="#1f2937">Fatima</text>
+  <rect x="375" y="377" width="25" height="8" rx="4" fill="#fecaca"/>
+  <text x="380" y="383" font-family="Arial, sans-serif" font-size="6" fill="#991b1b">Inactive</text>
+  <text x="425" y="382" font-family="Arial, sans-serif" font-size="7" fill="#3b82f6">Edit</text>
+  
+  <text x="310" y="425" font-family="Arial, sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Table Component</text>
+  <text x="310" y="440" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Data tables with sorting</text>
+  
+  <!-- Chart Component -->
+  <rect x="520" y="330" width="200" height="120" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+  <rect x="530" y="340" width="180" height="60" rx="4" fill="#f8fafc"/>
+  
+  <!-- Chart Example -->
+  <rect x="540" y="350" width="160" height="40" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+  
+  <!-- Chart Bars -->
+  <rect x="550" y="370" width="8" height="15" fill="#3b82f6"/>
+  <rect x="565" y="365" width="8" height="20" fill="#10b981"/>
+  <rect x="580" y="375" width="8" height="10" fill="#f59e0b"/>
+  <rect x="595" y="360" width="8" height="25" fill="#ef4444"/>
+  <rect x="610" y="368" width="8" height="17" fill="#8b5cf6"/>
+  
+  <!-- Chart Labels -->
+  <text x="548" y="395" font-family="Arial, sans-serif" font-size="6" fill="#6b7280">Jan</text>
+  <text x="563" y="395" font-family="Arial, sans-serif" font-size="6" fill="#6b7280">Feb</text>
+  <text x="578" y="395" font-family="Arial, sans-serif" font-size="6" fill="#6b7280">Mar</text>
+  <text x="593" y="395" font-family="Arial, sans-serif" font-size="6" fill="#6b7280">Apr</text>
+  <text x="608" y="395" font-family="Arial, sans-serif" font-size="6" fill="#6b7280">May</text>
+  
+  <text x="530" y="425" font-family="Arial, sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Chart Component</text>
+  <text x="530" y="440" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Interactive data visualization</text>
+  
+  <!-- Footer -->
+  <rect x="50" y="470" width="700" height="80" fill="#f8fafc" stroke="#e2e8f0"/>
+  
+  <!-- Stats -->
+  <text x="80" y="495" font-family="Arial, sans-serif" font-size="14" fill="#1f2937" font-weight="bold">50+ Components</text>
+  <text x="80" y="510" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Ready to use in your projects</text>
+  
+  <text x="250" y="495" font-family="Arial, sans-serif" font-size="14" fill="#1f2937" font-weight="bold">TypeScript</text>
+  <text x="250" y="510" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Fully typed components</text>
+  
+  <text x="400" y="495" font-family="Arial, sans-serif" font-size="14" fill="#1f2937" font-weight="bold">Customizable</text>
+  <text x="400" y="510" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">Easy to theme and style</text>
+  
+  <!-- Download Button -->
+  <rect x="580" y="485" width="120" height="35" rx="8" fill="#3b82f6"/>
+  <text x="620" y="505" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">Download Now</text>
+  
+  <!-- Version Badge -->
+  <rect x="580" y="525" width="60" height="20" rx="10" fill="#10b981"/>
+  <text x="600" y="537" font-family="Arial, sans-serif" font-size="9" fill="white" font-weight="bold">v2.1.0</text>
+</svg>

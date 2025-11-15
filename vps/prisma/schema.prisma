@@ -1,0 +1,896 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  profileImage  String?   // Photo de profil
+  password      String?
+  role          Role      @default(CLIENT)
+  isBlocked     Boolean   @default(false)
+  blockedAt     DateTime?
+  blockedReason String?
+  
+  // Informations de profil étendues
+  firstName     String?
+  lastName      String?
+  phone         String?
+  address       String?   // Adresse complète
+  postalCode    String?   // Code postal
+  city          String?   // Ville
+  country       String?   // Pays (ISO code ou nom)
+  
+  // Spécifique à l'Algérie
+  wilayaId      String?   // ID de la wilaya si en Algérie
+  communeId     String?   // ID de la commune si en Algérie
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  wilaya        Wilaya?   @relation(fields: [wilayaId], references: [id])
+  commune       Commune?  @relation(fields: [communeId], references: [id])
+  
+  accounts      Account[]
+  sessions      Session[]
+  orders        Order[]
+  projects      Project[]
+  enrollments   Enrollment[]
+  reviews       Review[]
+  messages      Message[]
+  progresses    Progress[]
+  invoices      Invoice[]
+  carts         Cart[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  parentId    String?
+  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  products    Product[]
+  courses     Course[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  
+  // 🏷️ 1. Informations Générales
+  name        String
+  slug        String      @unique
+  logo        String?     // Logo ou image de présentation
+  version     String?     // Version du produit
+  publishedAt DateTime?   // Date de publication
+  
+  // 💬 2. Description du Produit
+  tagline     String?     // Accroche marketing
+  shortDescription String? // Description courte (2-3 lignes)
+  description String      // Description longue/détaillée
+  targetAudience String?  // Public cible
+  problemSolved String?   // Problème résolu
+  keyBenefits String?     // Valeur ajoutée/bénéfices clés (JSON)
+  
+  // ⚙️ 3. Fonctionnalités Principales
+  features    String?     // Liste des fonctionnalités (JSON)
+  screenshots String?     // Captures d'écran (JSON array of URLs)
+  demoUrl     String?     // Lien vers démo en ligne
+  videoUrl    String?     // Vidéo de démonstration
+  
+  // 🧰 4. Détails Techniques
+  type        ProductType
+  appType     AppType?    // Type d'application
+  compatibility String?   // Navigateurs/OS supportés (JSON)
+  languages   String?     // Langues disponibles (JSON)
+  technologies String?    // Technologies utilisées (JSON)
+  requirements String?    // Conditions d'installation
+  hosting     String?     // Informations d'hébergement
+  security    String?     // Sécurité des données
+  
+  // 💵 5. Tarification
+  price       Float       // Prix en euros
+  priceDA     Float?      // Prix en dinars algériens
+  isFree      Boolean     @default(false)
+  pricingPlans String?    // Formules tarifaires (JSON)
+  trialPeriod Int?        // Période d'essai en jours
+  paymentMethods String?  // Moyens de paiement (JSON)
+  
+  // 👥 6. Assistance et Support
+  supportTypes String?    // Types de support (JSON)
+  documentation String?   // Liens documentation/FAQ
+  training    String?     // Formation/onboarding
+  updatePolicy String?    // Politique de mise à jour
+  
+  // 📊 7. Témoignages et Références
+  testimonials String?    // Témoignages clients (JSON)
+  caseStudies String?     // Cas d'usage/études de cas (JSON)
+  partners    String?     // Logos partenaires/clients (JSON)
+  
+  // 🔐 8. Informations Légales
+  termsOfUse  String?     // CGU
+  privacyPolicy String?   // Politique de confidentialité
+  license     String?     // Licence d'utilisation
+  
+  // Champs existants
+  status      ProductStatus @default(ACTIVE)
+  image       String?     // Image principale (deprecated, use logo)
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+  reviews     Review[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum ProductType {
+  SERVICE
+  SOFTWARE
+  COMPONENT
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+enum AppType {
+  WEB_APP
+  DESKTOP_APP
+  MOBILE_APP
+  BROWSER_EXTENSION
+  PLUGIN
+  API_SERVICE
+  SAAS_PLATFORM
+  MULTIPLATFORM
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  slug        String       @unique
+  description String
+  shortDescription String?
+  logo        String?
+  duration    Int          // in minutes
+  level       CourseLevel
+  language    String?
+  isActive    Boolean      @default(true)
+  // Commerce
+  price       Float
+  priceDA     Float?
+  isFree      Boolean      @default(false)
+  // Classification
+  categoryId  String
+  category    Category     @relation(fields: [categoryId], references: [id])
+  // Marketing & contenu
+  features    String?      // JSON array of key points
+  targetAudience String?
+  objectives  String?      // JSON array of objectives
+  prerequisites String?
+  lessons     Lesson[]
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  videoUrl    String
+  duration    Int      // in minutes
+  order       Int
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  progress    Progress[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Enrollment {
+  id           String   @id @default(cuid())
+  userId       String
+  courseId     String
+  enrolledAt   DateTime @default(now())
+  completedAt  DateTime?
+  progress     Int      @default(0) // percentage
+  
+  user         User     @relation(fields: [userId], references: [id])
+  course       Course   @relation(fields: [courseId], references: [id])
+  progresses   Progress[]
+
+  @@unique([userId, courseId])
+}
+
+model Progress {
+  id           String     @id @default(cuid())
+  userId       String
+  lessonId     String
+  enrollmentId String
+  completed    Boolean    @default(false)
+  watchTime    Int        @default(0) // in seconds
+  completedAt  DateTime?
+  
+  user         User       @relation(fields: [userId], references: [id])
+  lesson       Lesson     @relation(fields: [lessonId], references: [id])
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([userId, lessonId])
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  userId      String
+  total       Float
+  status      OrderStatus @default(PENDING)
+  paymentId   String?
+  paymentMethod String?
+  user        User        @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int     @default(1)
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  status      ProjectStatus @default(PLANNING)
+  progress    Int           @default(0) // percentage
+  startDate   DateTime?
+  endDate     DateTime?
+  budget      Float?
+  clientId    String
+  client      User          @relation(fields: [clientId], references: [id])
+  milestones  Milestone[]
+  messages    Message[]
+  files       ProjectFile[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+model Milestone {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  completed   Boolean   @default(false)
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  projectId String
+  sender    User     @relation(fields: [senderId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model ProjectFile {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  size      Int
+  mimeType  String
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  uploadedAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1-5
+  comment   String?
+  userId    String
+  productId String?
+  projectId String?
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  excerpt     String?
+  image       String?
+  published   Boolean  @default(false)
+  tags        String? // JSON string of tags array
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EmailTemplate {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique
+  subject     String
+  htmlContent String
+  textContent String?
+  type        EmailTemplateType
+  variables   String?           // JSON string of available variables
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model PageContent {
+  id          String   @id @default(cuid())
+  pageSlug    String   // e.g., 'home', 'about', 'contact'
+  sectionKey  String   // e.g., 'hero', 'features', 'testimonials'
+  title       String
+  content     String   // HTML content
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([pageSlug, sectionKey])
+}
+
+model EmailLog {
+  id          String   @id @default(cuid())
+  to          String
+  subject     String
+  templateId  String?
+  status      EmailStatus @default(PENDING)
+  errorMessage String?
+  sentAt      DateTime?
+  createdAt   DateTime @default(now())
+}
+
+enum EmailTemplateType {
+  WELCOME
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  ORDER_CONFIRMATION
+  COURSE_ENROLLMENT
+  COURSE_COMPLETION
+  NEWSLETTER
+  NOTIFICATION
+  CUSTOM
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+  BOUNCED
+}
+
+model SMTPSettings {
+  id          String   @id @default(cuid())
+  host        String
+  port        Int
+  secure      Boolean  @default(false)
+  username    String
+  password    String   // Encrypted password
+  fromEmail   String
+  fromName    String
+  isActive    Boolean  @default(true)
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([isDefault]) // Only one default configuration allowed
+}
+
+model AppSettings {
+  id              String   @id @default(cuid())
+  tinymceApiKey   String?  // TinyMCE API key for premium features
+  openaiApiKey    String?  // OpenAI/ChatGPT API key for content generation
+  geminiApiKey    String?  // Google Gemini API key for content generation
+  siteName        String   @default("WindevExpert Platform")
+  siteDescription String?
+  maintenanceMode Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model QuoteRequest {
+  id                     String            @id @default(cuid())
+  quoteNumber            String            @unique
+  
+  // Informations personnelles
+  firstName              String
+  lastName               String
+  email                  String
+  phone                  String
+  company                String?
+  position               String?
+  
+  // Projet
+  projectType            String
+  projectTitle           String
+  projectDescription     String
+  
+  // Services et fonctionnalités
+  services               String            // JSON array of selected services
+  features               String?           // JSON array of selected features
+  
+  // Budget et délais
+  budget                 String
+  timeline               String
+  
+  // Informations supplémentaires
+  hasExistingWebsite     Boolean           @default(false)
+  existingWebsiteUrl     String?
+  targetAudience         String?
+  competitors            String?
+  additionalInfo         String?
+  
+  // Préférences de contact
+  preferredContactMethod String            @default("email")
+  preferredContactTime   String            @default("anytime")
+  
+  // Consentements
+  acceptTerms            Boolean           @default(false)
+  acceptMarketing        Boolean           @default(false)
+  
+  // Statut et suivi
+  status                 QuoteRequestStatus @default(PENDING)
+  adminNotes             String?
+  estimatedPrice         Float?
+  quoteSentAt            DateTime?
+  
+  // Notifications admin
+  adminViewed            Boolean           @default(false)
+  adminViewedAt          DateTime?
+  
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+}
+
+enum QuoteRequestStatus {
+  PENDING
+  REVIEWED
+  QUOTED
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+model ContactSettings {
+  id          String   @id @default(cuid())
+  
+  // Coordonnées principales
+  email       String?
+  phone       String?
+  whatsapp    String?
+  address     String?
+  
+  // Réseaux sociaux
+  facebook    String?
+  twitter     String?
+  linkedin    String?
+  instagram   String?
+  youtube     String?
+  github      String?
+  
+  // Horaires d'ouverture
+  openingHours String? // JSON string pour les horaires
+  
+  // Informations supplémentaires
+  companyName String?
+  description String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("contact_settings")
+}
+
+// Paramètres de paiement pour l'Algérie
+model PaymentSettings {
+  id              String   @id @default(cuid())
+  
+  // Comptes bancaires algériens
+  ccpAccount      String?  // Compte CCP
+  ccpAccountName  String?  // Nom du titulaire CCP
+  bankAccount     String?  // Compte bancaire
+  bankAccountName String?  // Nom du titulaire bancaire
+  bankName        String?  // Nom de la banque
+  
+  // Paramètres SlickPay
+  slickPayEnabled Boolean  @default(false)
+  slickPayPublicKey String? // Clé publique SlickPay
+  slickPaySecretKey String? // Clé secrète SlickPay
+  slickPayTestMode Boolean @default(true)
+  slickPayWebhookUrl String? // URL de webhook pour les notifications
+  
+  // Paramètres Stripe
+  stripeEnabled Boolean @default(false)
+  stripePublicKey String? // Clé publique Stripe
+  stripeSecretKey String? // Clé secrète Stripe
+  stripeTestMode Boolean @default(true)
+  stripeWebhookSecret String? // Secret du webhook Stripe
+  
+  // Paramètres généraux
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Factures générées pour les paiements
+model Invoice {
+  id              String        @id @default(cuid())
+  invoiceNumber   String        @unique
+  
+  // Informations client
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  
+  // Informations produit/formation
+  productId       String?
+  productName     String
+  productPrice    Float
+  currency        String        @default("DZD") // DZD ou EUR
+  
+  // Informations de paiement
+  paymentMethod   PaymentMethod
+  totalAmount     Float
+  
+  // Statut et suivi
+  status          InvoiceStatus @default(UNPAID)
+  dueDate         DateTime
+  paidAt          DateTime?
+  
+  // Preuves de paiement
+  paymentProofs   PaymentProof[]
+  
+  // Notifications admin
+  adminNotified   Boolean       @default(false)
+  adminViewed     Boolean       @default(false)
+  adminViewedAt   DateTime?
+  validatedBy     String?       // ID de l'admin qui a validé
+  validatedAt     DateTime?
+  
+  // Métadonnées
+  notes           String?       // Notes admin
+  rejectionReason String?       // Raison du rejet si applicable
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// Preuves de paiement uploadées par les clients
+model PaymentProof {
+  id          String   @id @default(cuid())
+  
+  // Référence à la facture
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  
+  // Informations du fichier
+  fileName    String
+  fileUrl     String
+  fileSize    Int
+  mimeType    String
+  
+  // Informations de paiement
+  paymentDate DateTime?
+  amount      Float?
+  reference   String?   // Référence de transaction
+  
+  // Statut de validation
+  status      ProofStatus @default(PENDING)
+  adminNotes  String?     // Notes de l'admin lors de la validation
+  
+  // Suivi
+  uploadedAt  DateTime @default(now())
+  reviewedAt  DateTime?
+  reviewedBy  String?   // ID de l'admin qui a examiné
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Notifications pour les admins
+model AdminNotification {
+  id          String             @id @default(cuid())
+  
+  // Type et contenu
+  type        NotificationType
+  title       String
+  message     String
+  
+  // Références
+  invoiceId   String?
+  userId      String?
+  
+  // Statut
+  isRead      Boolean            @default(false)
+  readAt      DateTime?
+  
+  // Métadonnées
+  priority    NotificationPriority @default(MEDIUM)
+  actionUrl   String?            // URL pour l'action à effectuer
+  
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+// Enums pour les nouveaux modèles
+enum PaymentMethod {
+  CCP           // Compte Chèques Postaux
+  BANK_TRANSFER // Virement bancaire
+  SLICKPAY      // Paiement par carte via SlickPay
+}
+
+enum InvoiceStatus {
+  UNPAID        // Facture créée, en attente de paiement
+  PROOF_UPLOADED // Preuve de paiement uploadée
+  UNDER_REVIEW  // En cours de vérification par l'admin
+  PAID          // Paiement validé
+  REJECTED      // Preuve de paiement rejetée
+  CANCELLED     // Facture annulée
+}
+
+enum ProofStatus {
+  PENDING       // En attente de vérification
+  APPROVED      // Preuve approuvée
+  REJECTED      // Preuve rejetée
+  NEEDS_INFO    // Informations supplémentaires requises
+}
+
+enum NotificationType {
+  PAYMENT_PROOF_UPLOADED    // Nouvelle preuve de paiement
+  PAYMENT_VALIDATED         // Paiement validé
+  PAYMENT_REJECTED          // Paiement rejeté
+  INVOICE_CREATED           // Nouvelle facture créée
+  SYSTEM_ALERT              // Alerte système
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Modèles pour les données géographiques algériennes
+model Wilaya {
+  id        String    @id @default(cuid())
+  code      String    @unique  // Code officiel de la wilaya (01-58)
+  name      String               // Nom de la wilaya
+  nameAr    String?              // Nom en arabe
+  
+  communes  Commune[]            // Communes de cette wilaya
+  users     User[]               // Utilisateurs de cette wilaya
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Commune {
+  id        String    @id @default(cuid())
+  code      String               // Code officiel de la commune
+  name      String               // Nom de la commune
+  nameAr    String?              // Nom en arabe
+  wilayaId  String               // ID de la wilaya parent
+  
+  wilaya    Wilaya    @relation(fields: [wilayaId], references: [id])
+  users     User[]               // Utilisateurs de cette commune
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  @@unique([code, wilayaId])     // Code unique par wilaya
+}
+
+// Modèles pour le système de panier
+model Cart {
+  id          String     @id @default(cuid())
+  sessionId   String?    // Pour les utilisateurs non connectés
+  userId      String?    // Pour les utilisateurs connectés
+  total       Float      @default(0)
+  
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       CartItem[]
+  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  @@unique([sessionId])
+  @@unique([userId])
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int     @default(1)
+  price     Float   // Prix au moment de l'ajout
+
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([cartId, productId]) // Un produit par panier
+}
+
+// =============================
+// Modèle Formations (nouvelle structure)
+// =============================
+
+enum LangueFormation {
+  FRANCAIS
+  ANGLAIS
+}
+
+enum CategorieFormation {
+  DEVELOPPEMENT_WEB
+  MARKETING
+}
+
+enum SousCategorieFormation {
+  JAVASCRIPT
+  SEO
+}
+
+enum NiveauRequisFormation {
+  DEBUTANT
+  INTERMEDIAIRE
+  AVANCE
+}
+
+enum TypeAccesFormation {
+  ACCES_A_VIE
+  ABONNEMENT_1_AN
+}
+
+enum StatutFormation {
+  BROUILLON
+  PUBLIE
+  ARCHIVE
+}
+
+model Formation {
+  // Informations Générales
+  id_formation            String   @id
+  titre                   String
+  sous_titre              String?
+  description_courte      String?
+  description_complete    String
+  langue                  LangueFormation
+  categorie               CategorieFormation
+  sous_categorie          SousCategorieFormation?
+
+  // Contenu Pédagogique
+  objectifs_apprentissage String?   // JSON ou HTML
+  duree_totale_heures     Decimal   @default(0)
+  nombre_modules          Int       @default(0)
+  nombre_lecons           Int       @default(0)
+  certificat_fin_formation Boolean  @default(false)
+
+  // Public Cible et Prérequis
+  niveau_requis           NiveauRequisFormation
+  prerequis               String?
+  public_cible            String?
+
+  // Informations Commerciales
+  prix_usd                Decimal
+  prix_eur                Decimal
+  prix_dzd                Decimal
+  prix_afr                Decimal
+  type_acces              TypeAccesFormation
+  garantie_remboursement_jours Int? @default(0)
+
+  // Médias et Marketing
+  image_couverture_url    String?
+  video_presentation_url  String?
+  mots_cles               String?
+  url_slug                String   @unique
+  lien_paiement           String?
+
+  // Données Administratives
+  statut                  StatutFormation @default(BROUILLON)
+  date_creation           DateTime        @default(now())
+  date_mise_a_jour        DateTime        @updatedAt
+  note_moyenne            Decimal?
+  nombre_avis             Int             @default(0)
+
+  @@map("Formations")
+}

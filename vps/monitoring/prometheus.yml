@@ -1,0 +1,61 @@
+# Configuration Prometheus pour WinDevExpert
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'
+rule_files:
+  - "alert_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node exporter for system metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # WinDevExpert application metrics
+  - job_name: 'windevexpert'
+    static_configs:
+      - targets: ['localhost:3000']
+    scrape_interval: 15s
+    metrics_path: /api/metrics
+    params:
+      format: ['prometheus']
+
+  # Nginx metrics (si nginx-prometheus-exporter est installé)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['localhost:9113']
+    scrape_interval: 15s
+
+  # PostgreSQL metrics (si postgres_exporter est installé)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['localhost:9187']
+    scrape_interval: 15s
+
+  # Redis metrics (si redis_exporter est installé)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['localhost:9121']
+    scrape_interval: 15s
+
+  # Docker metrics (si docker est utilisé)
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['localhost:9323']
+    scrape_interval: 15s

@@ -1,0 +1,94 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f8fafc"/>
+  
+  <!-- Desktop Window -->
+  <rect x="30" y="30" width="340" height="240" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="2"/>
+  
+  <!-- Title Bar -->
+  <rect x="30" y="30" width="340" height="25" rx="8" fill="#374151"/>
+  <rect x="30" y="47" width="340" height="8" fill="#374151"/>
+  
+  <!-- Window Controls -->
+  <circle cx="45" cy="42" r="4" fill="#ef4444"/>
+  <circle cx="60" cy="42" r="4" fill="#f59e0b"/>
+  <circle cx="75" cy="42" r="4" fill="#10b981"/>
+  
+  <!-- Window Title -->
+  <text x="180" y="47" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold" text-anchor="middle">Gestion Stock Pro</text>
+  
+  <!-- Sidebar -->
+  <rect x="35" y="60" width="80" height="205" fill="#f9fafb" stroke="#e5e7eb"/>
+  
+  <!-- Sidebar Menu -->
+  <rect x="40" y="70" width="70" height="20" rx="4" fill="#3b82f6"/>
+  <text x="45" y="83" font-family="Arial, sans-serif" font-size="8" fill="white" font-weight="bold">📊 Dashboard</text>
+  
+  <rect x="40" y="95" width="70" height="20" rx="4" fill="transparent"/>
+  <text x="45" y="108" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">📦 Produits</text>
+  
+  <rect x="40" y="120" width="70" height="20" rx="4" fill="transparent"/>
+  <text x="45" y="133" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">📋 Commandes</text>
+  
+  <rect x="40" y="145" width="70" height="20" rx="4" fill="transparent"/>
+  <text x="45" y="158" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">👥 Fournisseurs</text>
+  
+  <rect x="40" y="170" width="70" height="20" rx="4" fill="transparent"/>
+  <text x="45" y="183" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">📈 Rapports</text>
+  
+  <rect x="40" y="195" width="70" height="20" rx="4" fill="transparent"/>
+  <text x="45" y="208" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">⚙️ Paramètres</text>
+  
+  <!-- Main Content Area -->
+  <rect x="120" y="60" width="245" height="205" fill="#ffffff"/>
+  
+  <!-- Header -->
+  <rect x="125" y="65" width="235" height="25" fill="#f8fafc"/>
+  <text x="130" y="80" font-family="Arial, sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Tableau de Bord - Stock</text>
+  
+  <!-- Stats Cards -->
+  <rect x="130" y="100" width="50" height="35" rx="4" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="135" y="112" font-family="Arial, sans-serif" font-size="7" fill="#1e40af">Produits</text>
+  <text x="135" y="125" font-family="Arial, sans-serif" font-size="12" fill="#1e40af" font-weight="bold">2,847</text>
+  
+  <rect x="190" y="100" width="50" height="35" rx="4" fill="#dcfce7" stroke="#10b981"/>
+  <text x="195" y="112" font-family="Arial, sans-serif" font-size="7" fill="#047857">En Stock</text>
+  <text x="195" y="125" font-family="Arial, sans-serif" font-size="12" fill="#047857" font-weight="bold">2,156</text>
+  
+  <rect x="250" y="100" width="50" height="35" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="255" y="112" font-family="Arial, sans-serif" font-size="7" fill="#92400e">Faible Stock</text>
+  <text x="255" y="125" font-family="Arial, sans-serif" font-size="12" fill="#92400e" font-weight="bold">89</text>
+  
+  <rect x="310" y="100" width="50" height="35" rx="4" fill="#fce7f3" stroke="#ef4444"/>
+  <text x="315" y="112" font-family="Arial, sans-serif" font-size="7" fill="#be185d">Rupture</text>
+  <text x="315" y="125" font-family="Arial, sans-serif" font-size="12" fill="#be185d" font-weight="bold">12</text>
+  
+  <!-- Chart Area -->
+  <rect x="130" y="145" width="110" height="60" fill="#f8fafc" stroke="#e5e7eb"/>
+  <text x="135" y="158" font-family="Arial, sans-serif" font-size="8" fill="#374151" font-weight="bold">Évolution Stock</text>
+  
+  <!-- Chart Lines -->
+  <polyline points="135,190 145,180 155,185 165,175 175,180 185,170 195,175 205,165 215,170 225,160 235,165" 
+            fill="none" stroke="#3b82f6" stroke-width="2"/>
+  <polyline points="135,195 145,185 155,190 165,180 175,185 185,175 195,180 205,170 215,175 225,165 235,170" 
+            fill="none" stroke="#10b981" stroke-width="2"/>
+  
+  <!-- Recent Activity -->
+  <rect x="250" y="145" width="110" height="60" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="255" y="158" font-family="Arial, sans-serif" font-size="8" fill="#374151" font-weight="bold">Activité Récente</text>
+  
+  <text x="255" y="172" font-family="Arial, sans-serif" font-size="7" fill="#6b7280">• Réception: 50 unités</text>
+  <text x="255" y="182" font-family="Arial, sans-serif" font-size="7" fill="#6b7280">• Vente: 23 produits</text>
+  <text x="255" y="192" font-family="Arial, sans-serif" font-size="7" fill="#6b7280">• Alerte: Stock faible</text>
+  <text x="255" y="202" font-family="Arial, sans-serif" font-size="7" fill="#6b7280">• Commande: 100 unités</text>
+  
+  <!-- Quick Actions -->
+  <rect x="130" y="215" width="60" height="20" rx="4" fill="#3b82f6"/>
+  <text x="135" y="228" font-family="Arial, sans-serif" font-size="8" fill="white">+ Nouveau Produit</text>
+  
+  <rect x="200" y="215" width="60" height="20" rx="4" fill="#10b981"/>
+  <text x="205" y="228" font-family="Arial, sans-serif" font-size="8" fill="white">📊 Rapport</text>
+  
+  <rect x="270" y="215" width="60" height="20" rx="4" fill="#f59e0b"/>
+  <text x="275" y="228" font-family="Arial, sans-serif" font-size="8" fill="white">⚠️ Alertes</text>
+</svg>

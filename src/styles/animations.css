@@ -1,0 +1,121 @@
+/* Optimisations des performances pour les animations */
+
+/* Variables CSS pour contrôler les animations */
+:root {
+  --animation-duration: 0.6s;
+  --animation-delay: 0.1s;
+  --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimisations pour les appareils à faibles performances */
+[data-low-performance="true"] {
+  --animation-duration: 0.3s;
+  --animation-delay: 0s;
+}
+
+/* Respect des préférences utilisateur pour la réduction de mouvement */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-reduce-motion="true"] * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Optimisations GPU pour de meilleures performances */
+.gpu-optimized {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Classes utilitaires pour les animations */
+.animate-fade-in {
+  animation: fadeIn var(--animation-duration) var(--animation-timing) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp var(--animation-duration) var(--animation-timing) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--animation-duration) var(--animation-timing) forwards;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Optimisations pour les éléments en parallax */
+.parallax-element {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimisations pour les cartes flottantes */
+.floating-card {
+  will-change: transform;
+  transform: translateZ(0);
+  transition: transform var(--animation-duration) var(--animation-timing);
+}
+
+/* Optimisations pour les arrière-plans animés */
+.animated-background {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Désactiver les animations sur les appareils très lents */
+@media (max-width: 480px) and (max-height: 800px) {
+  [data-low-performance="true"] .animated-background {
+    display: none;
+  }
+  
+  [data-low-performance="true"] .parallax-element {
+    transform: none !important;
+  }
+}
+
+/* Optimisations pour les écrans haute densité */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .gpu-optimized {
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -1,0 +1,41 @@
+# Dépendances
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+.next/
+out/
+dist/
+
+# Environnement
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs
+*.log
+logs/
+
+# Base de données
+*.sqlite
+*.db
+
+# Cache
+.cache/
+.temp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Installation
+.installed

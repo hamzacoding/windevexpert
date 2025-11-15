@@ -1,0 +1,56 @@
+[Unit]
+Description=WinDevExpert Application Service
+Documentation=https://windevexpert.com/docs
+After=network.target postgresql.service nginx.service
+Wants=network.target
+
+[Service]
+Type=forking
+User=windevexpert
+Group=windevexpert
+WorkingDirectory=/home/windevexpert/app
+
+# Environnement
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=PM2_HOME=/home/windevexpert/.pm2
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin
+
+# Commandes
+ExecStart=/usr/bin/pm2 start /home/windevexpert/app/ecosystem.config.js --env production
+ExecReload=/usr/bin/pm2 reload all
+ExecStop=/usr/bin/pm2 stop all
+ExecStopPost=/usr/bin/pm2 kill
+
+# Processus
+RemainAfterExit=yes
+Restart=always
+RestartSec=10
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# Limites système
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+
+# Timeout
+TimeoutStartSec=60
+TimeoutStopSec=30
+TimeoutStartFailureMode=terminate
+TimeoutStopFailureMode=terminate
+
+# Sécurité
+NoNewPrivileges=false
+PrivateTmp=false
+ProtectSystem=false
+ProtectHome=false
+ReadWritePaths=/home/windevexpert/app /home/windevexpert/logs /home/windevexpert/.pm2 /tmp
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=windevexpert
+
+[Install]
+WantedBy=multi-user.target

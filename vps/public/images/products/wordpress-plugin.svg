@@ -1,0 +1,94 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f8fafc"/>
+  
+  <!-- WordPress Admin Interface -->
+  <rect x="20" y="30" width="360" height="240" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="2"/>
+  
+  <!-- Admin Bar -->
+  <rect x="20" y="30" width="360" height="25" rx="8" fill="#23282d"/>
+  <rect x="20" y="47" width="360" height="8" fill="#23282d"/>
+  
+  <!-- WordPress Logo -->
+  <circle cx="40" cy="42" r="8" fill="#0073aa"/>
+  <text x="36" y="47" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">W</text>
+  
+  <!-- Admin Title -->
+  <text x="60" y="47" font-family="Arial, sans-serif" font-size="10" fill="#a0a5aa">WinDevExpert E-commerce Plugin</text>
+  
+  <!-- Sidebar -->
+  <rect x="25" y="60" width="80" height="205" fill="#23282d"/>
+  
+  <!-- Sidebar Menu -->
+  <rect x="30" y="70" width="70" height="18" fill="transparent"/>
+  <text x="35" y="82" font-family="Arial, sans-serif" font-size="8" fill="#a0a5aa">📊 Tableau de bord</text>
+  
+  <rect x="30" y="92" width="70" height="18" fill="transparent"/>
+  <text x="35" y="104" font-family="Arial, sans-serif" font-size="8" fill="#a0a5aa">📝 Articles</text>
+  
+  <rect x="30" y="114" width="70" height="18" fill="transparent"/>
+  <text x="35" y="126" font-family="Arial, sans-serif" font-size="8" fill="#a0a5aa">📄 Pages</text>
+  
+  <rect x="30" y="136" width="70" height="18" fill="#0073aa"/>
+  <text x="35" y="148" font-family="Arial, sans-serif" font-size="8" fill="white" font-weight="bold">🛒 E-commerce</text>
+  
+  <rect x="35" y="158" width="60" height="15" fill="transparent"/>
+  <text x="40" y="168" font-family="Arial, sans-serif" font-size="7" fill="#70b8d6">• Produits</text>
+  
+  <rect x="35" y="173" width="60" height="15" fill="transparent"/>
+  <text x="40" y="183" font-family="Arial, sans-serif" font-size="7" fill="#70b8d6">• Commandes</text>
+  
+  <rect x="35" y="188" width="60" height="15" fill="transparent"/>
+  <text x="40" y="198" font-family="Arial, sans-serif" font-size="7" fill="#70b8d6">• Paiements</text>
+  
+  <rect x="30" y="210" width="70" height="18" fill="transparent"/>
+  <text x="35" y="222" font-family="Arial, sans-serif" font-size="8" fill="#a0a5aa">🔌 Extensions</text>
+  
+  <!-- Main Content -->
+  <rect x="110" y="60" width="265" height="205" fill="#ffffff"/>
+  
+  <!-- Content Header -->
+  <rect x="115" y="65" width="255" height="30" fill="#f9f9f9" stroke="#ddd"/>
+  <text x="120" y="82" font-family="Arial, sans-serif" font-size="14" fill="#23282d" font-weight="bold">Plugin E-commerce WinDevExpert</text>
+  <text x="120" y="92" font-family="Arial, sans-serif" font-size="9" fill="#666">Gérez votre boutique en ligne avec facilité</text>
+  
+  <!-- Plugin Stats -->
+  <rect x="120" y="105" width="60" height="40" rx="4" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="125" y="118" font-family="Arial, sans-serif" font-size="8" fill="#1e40af">Produits</text>
+  <text x="125" y="135" font-family="Arial, sans-serif" font-size="16" fill="#1e40af" font-weight="bold">247</text>
+  
+  <rect x="190" y="105" width="60" height="40" rx="4" fill="#dcfce7" stroke="#10b981"/>
+  <text x="195" y="118" font-family="Arial, sans-serif" font-size="8" fill="#047857">Commandes</text>
+  <text x="195" y="135" font-family="Arial, sans-serif" font-size="16" fill="#047857" font-weight="bold">89</text>
+  
+  <rect x="260" y="105" width="60" height="40" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="265" y="118" font-family="Arial, sans-serif" font-size="8" fill="#92400e">CA Mensuel</text>
+  <text x="265" y="135" font-family="Arial, sans-serif" font-size="12" fill="#92400e" font-weight="bold">45,230 DA</text>
+  
+  <!-- Features List -->
+  <rect x="120" y="155" width="240" height="100" fill="#f8fafc" stroke="#e5e7eb"/>
+  <text x="125" y="170" font-family="Arial, sans-serif" font-size="10" fill="#374151" font-weight="bold">Fonctionnalités du Plugin:</text>
+  
+  <text x="130" y="185" font-family="Arial, sans-serif" font-size="9" fill="#10b981">✓ Gestion complète des produits</text>
+  <text x="130" y="198" font-family="Arial, sans-serif" font-size="9" fill="#10b981">✓ Panier et checkout optimisés</text>
+  <text x="130" y="211" font-family="Arial, sans-serif" font-size="9" fill="#10b981">✓ Intégration paiement DZD</text>
+  <text x="130" y="224" font-family="Arial, sans-serif" font-size="9" fill="#10b981">✓ Gestion des stocks en temps réel</text>
+  <text x="130" y="237" font-family="Arial, sans-serif" font-size="9" fill="#10b981">✓ Rapports et analytics</text>
+  <text x="130" y="250" font-family="Arial, sans-serif" font-size="9" fill="#10b981">✓ Support multi-langues (AR/FR)</text>
+  
+  <!-- Action Buttons -->
+  <rect x="330" y="105" width="35" height="20" rx="4" fill="#0073aa"/>
+  <text x="335" y="118" font-family="Arial, sans-serif" font-size="8" fill="white">Activer</text>
+  
+  <rect x="330" y="130" width="35" height="20" rx="4" fill="#666"/>
+  <text x="335" y="143" font-family="Arial, sans-serif" font-size="8" fill="white">Config</text>
+  
+  <!-- WordPress Plugin Icon -->
+  <rect x="330" y="160" width="30" height="30" rx="4" fill="#0073aa"/>
+  <text x="340" y="180" font-family="Arial, sans-serif" font-size="16" fill="white">🛒</text>
+  
+  <!-- Version Info -->
+  <text x="330" y="205" font-family="Arial, sans-serif" font-size="8" fill="#666">Version 2.1.0</text>
+  <text x="330" y="218" font-family="Arial, sans-serif" font-size="8" fill="#666">WordPress 6.0+</text>
+  <text x="330" y="231" font-family="Arial, sans-serif" font-size="8" fill="#666">PHP 8.0+</text>
+</svg>

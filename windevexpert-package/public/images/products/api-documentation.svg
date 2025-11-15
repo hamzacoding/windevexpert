@@ -1,0 +1,118 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0f172a"/>
+  
+  <!-- Browser Window -->
+  <rect x="50" y="50" width="700" height="500" rx="8" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  
+  <!-- Browser Header -->
+  <rect x="50" y="50" width="700" height="40" rx="8" fill="#334155"/>
+  <rect x="50" y="82" width="700" height="8" fill="#334155"/>
+  
+  <!-- Browser Controls -->
+  <circle cx="70" cy="70" r="6" fill="#ef4444"/>
+  <circle cx="90" cy="70" r="6" fill="#f59e0b"/>
+  <circle cx="110" cy="70" r="6" fill="#10b981"/>
+  
+  <!-- URL Bar -->
+  <rect x="150" y="60" width="400" height="20" rx="10" fill="#1e293b" stroke="#475569"/>
+  <text x="160" y="73" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">https://api.windevexpert.com/docs</text>
+  
+  <!-- Sidebar -->
+  <rect x="60" y="100" width="200" height="440" fill="#1e293b" stroke="#334155"/>
+  
+  <!-- Sidebar Header -->
+  <rect x="60" y="100" width="200" height="40" fill="#3b82f6"/>
+  <text x="80" y="125" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">API Documentation</text>
+  
+  <!-- Navigation Menu -->
+  <text x="80" y="160" font-family="Arial, sans-serif" font-size="12" fill="#e2e8f0" font-weight="bold">Getting Started</text>
+  <text x="90" y="180" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• Quick Start</text>
+  <text x="90" y="195" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• Authentication</text>
+  <text x="90" y="210" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• Rate Limits</text>
+  
+  <text x="80" y="240" font-family="Arial, sans-serif" font-size="12" fill="#e2e8f0" font-weight="bold">Endpoints</text>
+  <text x="90" y="260" font-family="Arial, sans-serif" font-size="10" fill="#3b82f6">• Users</text>
+  <text x="90" y="275" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• Products</text>
+  <text x="90" y="290" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• Orders</text>
+  <text x="90" y="305" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• Payments</text>
+  
+  <text x="80" y="335" font-family="Arial, sans-serif" font-size="12" fill="#e2e8f0" font-weight="bold">Examples</text>
+  <text x="90" y="355" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• JavaScript</text>
+  <text x="90" y="370" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• Python</text>
+  <text x="90" y="385" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• PHP</text>
+  <text x="90" y="400" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">• cURL</text>
+  
+  <!-- Main Content -->
+  <rect x="270" y="100" width="470" height="440" fill="#0f172a"/>
+  
+  <!-- Content Header -->
+  <text x="290" y="130" font-family="Arial, sans-serif" font-size="20" fill="#e2e8f0" font-weight="bold">GET /api/users</text>
+  <text x="290" y="150" font-family="Arial, sans-serif" font-size="12" fill="#94a3b8">Retrieve a list of users</text>
+  
+  <!-- HTTP Method Badge -->
+  <rect x="290" y="170" width="40" height="20" rx="4" fill="#10b981"/>
+  <text x="305" y="182" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">GET</text>
+  
+  <!-- Parameters Section -->
+  <text x="290" y="210" font-family="Arial, sans-serif" font-size="14" fill="#e2e8f0" font-weight="bold">Parameters</text>
+  
+  <rect x="290" y="220" width="430" height="80" rx="4" fill="#1e293b" stroke="#334155"/>
+  <text x="300" y="240" font-family="Monaco, monospace" font-size="10" fill="#fbbf24">page</text>
+  <text x="350" y="240" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">integer</text>
+  <text x="420" y="240" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">Page number (default: 1)</text>
+  
+  <text x="300" y="255" font-family="Monaco, monospace" font-size="10" fill="#fbbf24">limit</text>
+  <text x="350" y="255" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">integer</text>
+  <text x="420" y="255" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">Items per page (max: 100)</text>
+  
+  <text x="300" y="270" font-family="Monaco, monospace" font-size="10" fill="#fbbf24">search</text>
+  <text x="350" y="270" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">string</text>
+  <text x="420" y="270" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">Search term (optional)</text>
+  
+  <text x="300" y="285" font-family="Monaco, monospace" font-size="10" fill="#fbbf24">status</text>
+  <text x="350" y="285" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">string</text>
+  <text x="420" y="285" font-family="Monaco, monospace" font-size="10" fill="#94a3b8">active | inactive | all</text>
+  
+  <!-- Response Section -->
+  <text x="290" y="330" font-family="Arial, sans-serif" font-size="14" fill="#e2e8f0" font-weight="bold">Response</text>
+  
+  <!-- Status Code -->
+  <rect x="290" y="340" width="40" height="20" rx="4" fill="#10b981"/>
+  <text x="305" y="352" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">200</text>
+  <text x="340" y="352" font-family="Arial, sans-serif" font-size="10" fill="#94a3b8">Success</text>
+  
+  <!-- JSON Response -->
+  <rect x="290" y="370" width="430" height="150" rx="4" fill="#1e293b" stroke="#334155"/>
+  
+  <text x="300" y="390" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">{</text>
+  <text x="310" y="405" font-family="Monaco, monospace" font-size="9" fill="#fbbf24">"data"</text>
+  <text x="350" y="405" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">: [</text>
+  
+  <text x="320" y="420" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">{</text>
+  <text x="330" y="435" font-family="Monaco, monospace" font-size="9" fill="#fbbf24">"id"</text>
+  <text x="360" y="435" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">:</text>
+  <text x="375" y="435" font-family="Monaco, monospace" font-size="9" fill="#10b981">1</text>
+  <text x="385" y="435" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">,</text>
+  
+  <text x="330" y="450" font-family="Monaco, monospace" font-size="9" fill="#fbbf24">"name"</text>
+  <text x="370" y="450" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">:</text>
+  <text x="385" y="450" font-family="Monaco, monospace" font-size="9" fill="#a3e635">"Ahmed Benali"</text>
+  <text x="470" y="450" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">,</text>
+  
+  <text x="330" y="465" font-family="Monaco, monospace" font-size="9" fill="#fbbf24">"email"</text>
+  <text x="375" y="465" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">:</text>
+  <text x="390" y="465" font-family="Monaco, monospace" font-size="9" fill="#a3e635">"ahmed@example.com"</text>
+  
+  <text x="320" y="480" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">}</text>
+  
+  <text x="310" y="495" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">],</text>
+  <text x="310" y="510" font-family="Monaco, monospace" font-size="9" fill="#fbbf24">"total"</text>
+  <text x="350" y="510" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">:</text>
+  <text x="365" y="510" font-family="Monaco, monospace" font-size="9" fill="#10b981">1247</text>
+  <text x="300" y="525" font-family="Monaco, monospace" font-size="9" fill="#94a3b8">}</text>
+  
+  <!-- Try It Button -->
+  <rect x="600" y="340" width="80" height="30" rx="6" fill="#3b82f6"/>
+  <text x="625" y="358" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">Try it out</text>
+</svg>
