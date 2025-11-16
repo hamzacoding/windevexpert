@@ -8,16 +8,17 @@ export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     const { searchParams } = new URL(request.url)
-    const sessionId = searchParams.get('sessionId')
+    const sessionId = (searchParams.get('sessionId') || undefined)
+    const userId = (searchParams.get('userId') || session?.user?.id || undefined)
 
-    if (!session?.user?.id && !sessionId) {
+    if (!userId && !sessionId) {
       return NextResponse.json(
-        { error: 'Session ID required for guest users' },
+        { error: 'Either userId or sessionId is required' },
         { status: 400 }
       )
     }
 
-    const cart = await CartService.getCart(session?.user?.id, sessionId || undefined)
+    const cart = await CartService.getCart(userId, sessionId)
     if (!cart) {
       return NextResponse.json(
         { error: 'Cart not found' },

@@ -13,7 +13,7 @@ import { X, Plus, Upload, Sparkles } from 'lucide-react'
 import { ProductType, AppType } from '@/types/product'
 import { ImageUpload } from '@/components/ui/image-upload'
 import { MultiImageUpload } from '@/components/ui/multi-image-upload'
-import RichTextEditor from '@/components/ui/rich-text-editor'
+import { RichHtmlEditor } from '@/components/ui/rich-html-editor'
 
 interface Category {
   id: string
@@ -311,10 +311,12 @@ export default function ProductForm({ product, onSubmit, onCancel, isLoading }: 
             <Label htmlFor="description">Description détaillée *</Label>
             <div className="flex gap-2">
               <div className="flex-1">
-                <RichTextEditor
+                <RichHtmlEditor
                   value={formData.description}
                   onChange={(value) => handleInputChange('description', value)}
                   placeholder="Présentation complète du produit, ses bénéfices, et son objectif"
+                  height={300}
+                  uploadFolder="products"
                 />
               </div>
               <Button

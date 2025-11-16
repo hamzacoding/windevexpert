@@ -83,11 +83,15 @@ export class CartService {
         throw new Error('Either userId or sessionId must be provided')
       }
 
-      const insertQuery = `INSERT INTO Cart (userId, sessionId, total, createdAt, updatedAt) VALUES (?, ?, 0, NOW(), NOW())`
-      const result = await execute(insertQuery, [userId || null, sessionId || null])
+      const insertQuery = `INSERT INTO Cart (id, userId, sessionId, total, createdAt, updatedAt) VALUES (UUID(), ?, ?, 0, NOW(), NOW())`
+      await execute(insertQuery, [userId || null, sessionId || null])
+
+      const cartRow = userId
+        ? await queryOne(`SELECT * FROM Cart WHERE userId = ? ORDER BY createdAt DESC LIMIT 1`, [userId])
+        : await queryOne(`SELECT * FROM Cart WHERE sessionId = ? ORDER BY createdAt DESC LIMIT 1`, [sessionId])
 
       return {
-        id: result.insertId.toString(),
+        id: String(cartRow?.id ?? ''),
         userId: userId || undefined,
         sessionId: sessionId || undefined,
         items: [],
@@ -106,7 +110,8 @@ export class CartService {
     productId: string,
     quantity: number = 1,
     userId?: string,
-    sessionId?: string
+    sessionId?: string,
+    countryCode?: string
   ): Promise<Cart> {
     try {
       // Get or create cart
@@ -116,7 +121,10 @@ export class CartService {
       }
 
       // Get product details
-      const product = await queryOne(`SELECT * FROM Product WHERE id = ?`, [productId])
+      let product = await queryOne(`SELECT id, name, price, priceDA, slug FROM Product WHERE id = ?`, [productId])
+      if (!product) {
+        product = await queryOne(`SELECT id, name, price, priceDA, slug FROM Product WHERE slug = ?`, [productId])
+      }
 
       if (!product) {
         throw new Error('Product not found')
@@ -125,7 +133,7 @@ export class CartService {
       // Check if product is already in cart
       const existingItem = await queryOne(
         `SELECT * FROM CartItem WHERE cartId = ? AND productId = ?`,
-        [cart.id, productId]
+        [cart.id, product?.id]
       )
 
       if (existingItem) {
@@ -136,18 +144,24 @@ export class CartService {
         )
       } else {
         // Add new item to cart
+        const unitPrice = (() => {
+          const cc = (countryCode || '').toUpperCase()
+          if (cc === 'DZ' && product.priceDA != null) return Number(product.priceDA)
+          return Number(product.price ?? 0)
+        })()
         await execute(
-          `INSERT INTO CartItem (cartId, productId, quantity, price, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())`,
-          [cart.id, productId, quantity, product.price]
+          `INSERT INTO CartItem (id, cartId, productId, quantity, price, createdAt, updatedAt) VALUES (UUID(), ?, ?, ?, ?, NOW(), NOW())`,
+          [cart.id, product.id, quantity, unitPrice]
         )
       }
 
       // Recalculate and update cart total
       const updatedCart = await this.updateCartTotal(cart.id)
       return updatedCart
-    } catch (error) {
+    } catch (error: any) {
+      const message = typeof error?.message === 'string' ? error.message : 'Failed to add product to cart'
       console.error('Error adding to cart:', error)
-      throw new Error('Failed to add product to cart')
+      throw new Error(message)
     }
   }
 
@@ -203,14 +217,29 @@ export class CartService {
         [cartId]
       )
 
-      // Return updated cart
-      const cart = await this.getCart(undefined, undefined)
-      
-      if (!cart) {
+      // Fetch cart row to get identifiers
+      const cartRow = await queryOne(`SELECT * FROM Cart WHERE id = ?`, [cartId])
+      if (!cartRow) {
         throw new Error('Cart not found after clearing')
       }
-
-      return cart
+      let updated: Cart | null = null
+      try {
+        updated = await this.getCart(cartRow.userId || undefined, cartRow.sessionId || undefined)
+      } catch {}
+      if (!updated) {
+        // Return a minimal empty cart if join didn’t find rows yet
+        return {
+          id: cartRow.id,
+          userId: cartRow.userId || undefined,
+          sessionId: cartRow.sessionId || undefined,
+          items: [],
+          total: 0,
+          currency: 'EUR',
+          createdAt: cartRow.createdAt,
+          updatedAt: new Date(),
+        }
+      }
+      return updated
     } catch (error) {
       console.error('Error clearing cart:', error)
       throw new Error('Failed to clear cart')
@@ -250,7 +279,7 @@ export class CartService {
         } else {
           // Add new item
           await execute(
-            `INSERT INTO CartItem (cartId, productId, quantity, price, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())`,
+            `INSERT INTO CartItem (id, cartId, productId, quantity, price, createdAt, updatedAt) VALUES (UUID(), ?, ?, ?, ?, NOW(), NOW())`,
             [userCart.id, guestItem.productId, guestItem.quantity, guestItem.price]
           )
         }
@@ -272,9 +301,7 @@ export class CartService {
     try {
       const cart = await this.getCart(userId, sessionId)
       if (!cart) return 0
-
-      // Return the number of distinct products, not the sum of quantities
-      return cart.items.length
+      return cart.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0)
     } catch (error) {
       console.error('Error getting cart item count:', error)
       return 0

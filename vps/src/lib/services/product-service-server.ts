@@ -2,6 +2,17 @@ import { prisma } from '@/lib/prisma'
 import { Product } from '@/types/product'
 
 export class ProductServiceServer {
+  static parseArray(input: any): any[] {
+    if (input == null) return []
+    if (Array.isArray(input)) return input
+    const s = String(input)
+    if (!s.trim()) return []
+    try {
+      const parsed = JSON.parse(s)
+      if (Array.isArray(parsed)) return parsed
+    } catch {}
+    return s.split(',').map(x => x.trim()).filter(Boolean)
+  }
   static async getProductBySlug(slug: string): Promise<Product | null> {
     try {
       const product = await prisma.product.findUnique({
@@ -43,7 +54,7 @@ export class ProductServiceServer {
           updatedAt: product.category.updatedAt
         } : undefined,
         categoryId: product.categoryId,
-        tags: product.features ? JSON.parse(product.features) : [],
+        tags: ProductServiceServer.parseArray(product.features),
         isActive: product.status === 'ACTIVE',
         isFeatured: product.type === 'TRAINING', // Consider training as featured
         stock: 999, // Unlimited for digital products
@@ -53,7 +64,7 @@ export class ProductServiceServer {
         variants: [],
         seoTitle: product.name,
         seoDescription: product.description,
-        seoKeywords: product.features ? JSON.parse(product.features).join(', ') : '',
+        seoKeywords: ProductServiceServer.parseArray(product.features).join(', '),
         reviews: [],
         averageRating: 0,
         reviewCount: 0,
@@ -109,7 +120,7 @@ export class ProductServiceServer {
           updatedAt: product.category.updatedAt
         } : undefined,
         categoryId: product.categoryId,
-        tags: product.features ? JSON.parse(product.features) : [],
+        tags: ProductServiceServer.parseArray(product.features),
         isActive: product.status === 'ACTIVE',
         isFeatured: product.type === 'TRAINING',
         stock: 999,
@@ -119,7 +130,7 @@ export class ProductServiceServer {
         variants: [],
         seoTitle: product.name,
         seoDescription: product.description,
-        seoKeywords: product.features ? JSON.parse(product.features).join(', ') : '',
+        seoKeywords: ProductServiceServer.parseArray(product.features).join(', '),
         reviews: [],
         averageRating: 0,
         reviewCount: 0,
@@ -181,7 +192,7 @@ export class ProductServiceServer {
           updatedAt: product.category.updatedAt
         } : undefined,
         categoryId: product.categoryId,
-        tags: product.features ? JSON.parse(product.features) : [],
+        tags: ProductServiceServer.parseArray(product.features),
         isActive: product.status === 'ACTIVE',
         isFeatured: product.type === 'TRAINING',
         stock: 999,
@@ -191,7 +202,7 @@ export class ProductServiceServer {
         variants: [],
         seoTitle: product.name,
         seoDescription: product.description,
-        seoKeywords: product.features ? JSON.parse(product.features).join(', ') : '',
+        seoKeywords: ProductServiceServer.parseArray(product.features).join(', '),
         reviews: [],
         averageRating: 0,
         reviewCount: 0,

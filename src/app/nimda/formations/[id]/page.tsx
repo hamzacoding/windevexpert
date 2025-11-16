@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
-import HtmlEditor from '@/components/ui/html-editor'
+import { RichHtmlEditor } from '@/components/ui/rich-html-editor'
 import { Card } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { FormationImageUpload } from '@/components/ui/formation-image-upload'
@@ -113,13 +113,11 @@ export default function EditFormationPage() {
             </div>
             <div className="md:col-span-2">
               <Label>Description complète</Label>
-              <HtmlEditor
+              <RichHtmlEditor
                 value={form.description_complete}
                 onChange={(html) => update('description_complete', html)}
                 uploadFolder="formations"
                 height={400}
-                showVariables={false}
-                variableType="page"
                 placeholder="Saisissez la description complète..."
               />
             </div>

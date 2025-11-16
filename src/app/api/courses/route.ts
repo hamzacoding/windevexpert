@@ -2,6 +2,7 @@ export const runtime = 'nodejs'
 import { NextRequest, NextResponse } from 'next/server'
 import { queryOne, queryMany, testConnection } from '@/lib/db'
 import { detectCountryCode, buildPrixAffiche } from '@/lib/geo'
+import { getCache, setCache } from '@/lib/cache'
 
 // Normalise une URL publique pour les images (corrige les backslashes, supprime /public, assure un leading slash)
 function normalizePublicUrl(url: any): string {
@@ -103,7 +104,8 @@ export async function GET(request: NextRequest) {
            f.prix_dzd,
            f.mots_cles,
            f.image_couverture_url,
-           f.note_moyenne
+           f.note_moyenne,
+           f.url_slug
          FROM Formations f
          ${whereSql}
          ORDER BY f.date_creation DESC
@@ -139,6 +141,7 @@ export async function GET(request: NextRequest) {
 
         return {
           id: String(r.id_formation),
+          slug: r.url_slug || null,
           title: r.titre,
           description: r.description_courte || r.description_complete,
           duration: `${Number(r.duree_totale_heures || 0)} heures`,
@@ -163,6 +166,7 @@ export async function GET(request: NextRequest) {
           totalPages: Math.ceil(total / limit)
         }
       })
+      try { setCache(`courses_list_${countryCode}_${page}_${limit}_${category || 'all'}_${level || 'all'}`, { courses: formattedCourses, pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } }, 60_000) } catch {}
       try { res.cookies.set('country_code', countryCode, { maxAge: 60 * 60, path: '/', sameSite: 'lax' }) } catch {}
       return res
     } catch (mysqlErr) {

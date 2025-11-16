@@ -14,6 +14,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'WindevExpert - Plateforme SaaS de Développement',
   description: 'Plateforme SaaS pour services de développement, formations et gestion de projets',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://windevexpert.com'),
+  openGraph: {
+    siteName: 'WindevExpert',
+    locale: 'fr_FR',
+  },
 }
 
 export default async function RootLayout({

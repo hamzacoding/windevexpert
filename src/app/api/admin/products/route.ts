@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validation du type
-    if (!['FORMATION', 'SERVICE', 'PRODUCT'].includes(type)) {
+    if (!['FORMATION', 'SERVICE', 'PRODUCT'].includes(body.type)) {
       return NextResponse.json(
         { error: 'Type de produit invalide' },
         { status: 400 }
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validation du statut
-    if (!['ACTIVE', 'INACTIVE', 'DRAFT'].includes(status)) {
+    if (!['ACTIVE', 'INACTIVE', 'DRAFT'].includes(body.status)) {
       return NextResponse.json(
         { error: 'Statut invalide' },
         { status: 400 }

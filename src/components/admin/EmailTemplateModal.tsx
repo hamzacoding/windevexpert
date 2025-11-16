@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { X, Save, Eye, Sparkles } from 'lucide-react'
 import { EmailTemplateType } from '@prisma/client'
-import HtmlEditor from '@/components/ui/html-editor'
+import { RichHtmlEditor } from '@/components/ui/rich-html-editor'
+import { Tag, User, Mail, Globe, Building, Calendar } from 'lucide-react'
 import { AIContentGenerator, QuickAIGenerator } from '@/components/ai/AIContentGenerator'
 
 interface EmailTemplate {
@@ -358,13 +359,37 @@ export default function EmailTemplateModal({ isOpen, onClose, onSave, template }
                         />
                       </div>
                     )}
-                    <HtmlEditor
+                    <div className="bg-gray-50 rounded-lg p-4 mb-2">
+                      <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+                        <Tag className="w-4 h-4" />
+                        Variables disponibles
+                      </h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        {emailVariables.map((variable) => {
+                          const IconComponent = variable.icon as any
+                          return (
+                            <button
+                              key={variable.key}
+                              onClick={() => insertVariableAtCaret(variable.key)}
+                              className="flex items-center gap-2 p-2 text-xs bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                              title={`Insérer ${variable.label}`}
+                            >
+                              <IconComponent className="w-3 h-3 text-gray-500" />
+                              <span className="truncate">{variable.label}</span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                      <div className="mt-3 text-xs text-gray-500">
+                        Cliquez sur une variable pour l'insérer à la position du curseur.
+                      </div>
+                    </div>
+                    <RichHtmlEditor
                       value={formData.htmlContent}
                       onChange={(content) => setFormData(prev => ({ ...prev, htmlContent: content }))}
                       placeholder="Contenu HTML de l'email..."
                       height={400}
-                      showVariables={true}
-                      variableType="email"
+                      uploadFolder="emails"
                     />
                   </div>
                 ) : (
@@ -421,4 +446,24 @@ export default function EmailTemplateModal({ isOpen, onClose, onSave, template }
       </div>
     </div>
   )
+}
+const emailVariables = [
+  { key: '{{userName}}', label: 'Nom utilisateur', icon: User },
+  { key: '{{userEmail}}', label: 'Email utilisateur', icon: Mail },
+  { key: '{{SITE_NAME}}', label: 'Nom du site', icon: Globe },
+  { key: '{{SITE_URL}}', label: 'URL du site', icon: Globe },
+  { key: '{{LOGO_URL}}', label: 'URL du logo', icon: Building },
+  { key: '{{CURRENT_YEAR}}', label: 'Année actuelle', icon: Calendar },
+  { key: '{{actionUrl}}', label: 'URL d\'action', icon: Globe },
+  { key: '{{actionText}}', label: 'Texte d\'action', icon: Tag }
+]
+
+function insertVariableAtCaret(variable: string) {
+  try {
+    const editable = document.querySelector('.rich-html-editor__editable') as HTMLElement | null
+    if (editable) {
+      editable.focus()
+    }
+    document.execCommand('insertText', false, variable)
+  } catch {}
 }

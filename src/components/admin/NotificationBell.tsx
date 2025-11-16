@@ -38,6 +38,8 @@ export default function NotificationBell() {
   })
   const [loading, setLoading] = useState(true)
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+  const { data: session } = useSession()
 
   const fetchNotifications = async () => {
     try {
@@ -55,13 +57,15 @@ export default function NotificationBell() {
   }
 
   useEffect(() => {
+    const isAdminContext = pathname?.startsWith('/nimda') || session?.user?.role === 'ADMIN'
+    if (!isAdminContext) {
+      setLoading(false)
+      return
+    }
     fetchNotifications()
-    
-    // Actualiser les notifications toutes les 30 secondes
-    const interval = setInterval(fetchNotifications, 30000)
-    
+    const interval = setInterval(fetchNotifications, 60000)
     return () => clearInterval(interval)
-  }, [])
+  }, [pathname, session?.user?.role])
 
   const markAsRead = async (notificationId: string) => {
     try {
@@ -261,3 +265,5 @@ export default function NotificationBell() {
     </DropdownMenu>
   )
 }
+import { usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react'

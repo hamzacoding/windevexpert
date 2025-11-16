@@ -113,26 +113,31 @@ export default function AdminFormationsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Formations</h1>
-          <p className="text-sm text-gray-600">Gestion des formations (table Formations)</p>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+              <BookOpen className="h-6 w-6 mr-2 text-blue-600" />
+              Gestion des Formations
+            </h1>
+            <p className="text-gray-600 mt-1">Gérez vos formations, catégories et accès</p>
+          </div>
+          <Link href="/nimda/formations/new">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+              <PlusCircle className="h-4 w-4 mr-2" /> Nouvelle formation
+            </button>
+          </Link>
         </div>
-        <Link href="/nimda/formations/new">
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <PlusCircle className="mr-2 h-4 w-4" /> Nouvelle formation
-          </Button>
-        </Link>
       </div>
 
-      <Card className="p-4">
-        <form onSubmit={onSearchSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher par titre, slug..."
-          />
+      {/* Filtres */}
+      <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+        <form onSubmit={onSearchSubmit} className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="md:col-span-2">
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher par titre, slug..." />
+          </div>
           <Select value={statut} onValueChange={(val) => setStatut(val)}>
             <SelectTrigger>
               <SelectValue placeholder="Tous les statuts" />
@@ -144,100 +149,120 @@ export default function AdminFormationsPage() {
               <SelectItem value="ARCHIVE">Archivé</SelectItem>
             </SelectContent>
           </Select>
-          <div className="md:col-span-2 flex gap-2">
-            <Button type="submit" variant="default" disabled={loading}>
+          <div className="flex items-center justify-center bg-gray-50 rounded-lg p-2">
+            <span className="text-sm text-gray-600">{total} formation(s) trouvée(s)</span>
+          </div>
+          <div className="flex gap-2">
+            <Button type="submit" disabled={loading}>
               {loading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Filtrage...</>) : 'Filtrer'}
             </Button>
             <Button type="button" variant="outline" onClick={() => { setSearch(''); setStatut('all'); setPage(1); fetchFormations() }}>Réinitialiser</Button>
           </div>
         </form>
-      </Card>
+      </div>
 
-      <Card className="p-0 overflow-hidden">
-        {error && (
-          <div className="p-4 text-red-600">{error}</div>
-        )}
-        <Table>
-          <thead>
-            <tr className="bg-gray-50">
-              <th className="p-3 text-left">Titre</th>
-              <th className="p-3 text-left">Langue</th>
-              <th className="p-3 text-left">Catégorie</th>
-              <th className="p-3 text-left">Accès</th>
-              <th className="p-3 text-left">Prix EUR/DZD</th>
-              <th className="p-3 text-left">Statut</th>
-              <th className="p-3 text-left">Mise à jour</th>
-              <th className="p-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!loading && formations.length === 0 && (
+      {/* Tableau */}
+      <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        {error && <div className="p-4 text-red-600">{error}</div>}
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
               <tr>
-                <td colSpan={8} className="p-4 text-center text-gray-600">Aucune formation trouvée.</td>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Formation</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Langue</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Accès</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mise à jour</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
-            )}
-            {loading && (
-              <tr>
-                <td colSpan={8} className="p-4 text-center text-gray-600">Chargement...</td>
-              </tr>
-            )}
-            {formations.map((f) => (
-              <tr key={f.id_formation} className={`border-t transition-colors ${flashById[f.id_formation] === 'success' ? 'bg-green-50' : flashById[f.id_formation] === 'error' ? 'bg-red-50' : ''}`}>
-                <td className="p-3">
-                  <div className="font-medium">{f.titre}</div>
-                  <div className="text-xs text-gray-500">{f.url_slug}</div>
-                </td>
-                <td className="p-3">{f.langue}</td>
-                <td className="p-3">{f.categorie}{f.sous_categorie ? ` / ${f.sous_categorie}` : ''}</td>
-                <td className="p-3">{f.type_acces}</td>
-                <td className="p-3">€ {f.prix_eur} / DZD {f.prix_dzd}</td>
-                <td className="p-3">
-                  <div className="flex items-center gap-2">
-                    <Select
-                      value={f.statut}
-                      onValueChange={(val) => updateStatut(f.id_formation, val)}
-                      disabled={!!savingById[f.id_formation]}
-                    >
-                      <SelectTrigger className="w-[140px]">
-                        <SelectValue placeholder="Statut" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="BROUILLON">Brouillon</SelectItem>
-                        <SelectItem value="PUBLIE">Publié</SelectItem>
-                        <SelectItem value="ARCHIVE">Archivé</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {savingById[f.id_formation] ? (
-                      <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
-                    ) : flashById[f.id_formation] === 'success' ? (
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                    ) : null}
-                  </div>
-                </td>
-                <td className="p-3">{new Date(f.date_mise_a_jour).toLocaleString('fr-FR')}</td>
-                <td className="p-3 text-right">
-                  <div className="flex justify-end gap-2">
-                    <Link href={`/nimda/formations/${f.id_formation}`}>
-                      <Button variant="outline" size="sm"><Edit3 className="h-4 w-4 mr-1" /> Éditer</Button>
-                    </Link>
-                    <Link href={`/nimda/formations/${f.id_formation}/lecons`}>
-                      <Button variant="secondary" size="sm"><BookOpen className="h-4 w-4 mr-1" /> Leçons</Button>
-                    </Link>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <div className="flex items-center justify-between p-4 border-t">
-          <div className="text-sm text-gray-600">{total} résultat(s)</div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>Précédent</Button>
-            <div className="text-sm">Page {page} / {totalPages}</div>
-            <Button variant="outline" disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>Suivant</Button>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {!loading && formations.length === 0 && (
+                <tr>
+                  <td colSpan={8} className="p-4 text-center text-gray-600">Aucune formation trouvée.</td>
+                </tr>
+              )}
+              {loading && (
+                <tr>
+                  <td colSpan={8} className="p-4 text-center text-gray-600">Chargement...</td>
+                </tr>
+              )}
+              {formations.map((f) => (
+                <tr key={f.id_formation} className={`hover:bg-gray-50 ${flashById[f.id_formation] === 'success' ? 'bg-green-50' : flashById[f.id_formation] === 'error' ? 'bg-red-50' : ''}`}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 h-10 w-10">
+                        <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                          <BookOpen className="h-5 w-5 text-white" />
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">{f.titre}</div>
+                        <div className="text-sm text-gray-500 truncate max-w-xs">{f.url_slug}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{f.langue}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{f.categorie}{f.sous_categorie ? ` / ${f.sous_categorie}` : ''}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{f.type_acces}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {f.prix_dzd ? (
+                      <span className="font-medium text-blue-600">{Number(f.prix_dzd).toLocaleString()} DZD</span>
+                    ) : f.prix_eur ? (
+                      <span className="font-medium">{Number(f.prix_eur).toLocaleString()}€</span>
+                    ) : (
+                      <span className="text-green-600 font-medium">Gratuit</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${f.statut === 'PUBLIE' ? 'bg-green-100 text-green-800' : f.statut === 'BROUILLON' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}`}>{f.statut}</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(f.date_mise_a_jour).toLocaleDateString('fr-FR')}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex items-center justify-end space-x-2">
+                      <Link href={`/nimda/formations/${f.id_formation}`}>
+                        <button className="text-yellow-600 hover:text-yellow-900 p-1 rounded" title="Modifier">
+                          <Edit3 className="h-4 w-4" />
+                        </button>
+                      </Link>
+                      <Link href={`/nimda/formations/${f.id_formation}/lecons`}>
+                        <button className="text-blue-600 hover:text-blue-900 p-1 rounded" title="Leçons">
+                          <BookOpen className="h-4 w-4" />
+                        </button>
+                      </Link>
+                      <Select value={f.statut} onValueChange={(val) => updateStatut(f.id_formation, val)} disabled={!!savingById[f.id_formation]}>
+                        <SelectTrigger className="w-[140px]">
+                          <SelectValue placeholder="Statut" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="BROUILLON">Brouillon</SelectItem>
+                          <SelectItem value="PUBLIE">Publié</SelectItem>
+                          <SelectItem value="ARCHIVE">Archivé</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {savingById[f.id_formation] ? (
+                        <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
+                      ) : flashById[f.id_formation] === 'success' ? (
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      ) : null}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 flex items-center justify-between">
+          <div className="text-sm text-gray-600">Page {page} / {totalPages}</div>
+          <div className="flex items-center space-x-2">
+            <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">Précédent</button>
+            <span className="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg">{page}</span>
+            <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">Suivant</button>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   )
 }

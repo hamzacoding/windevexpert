@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Product } from '@/types/product'
+import { detectClientCountryCode, determineDisplayPrice } from '@/lib/client-geo'
 import { Button } from '@/components/ui/button'
 import { 
   Star, 
@@ -310,35 +311,29 @@ export function ProductCard({
                 )}
               </div>
             ) : (
-              <>
-                {/* DA Price */}
-                {product.priceDA && (
+              (() => {
+                const pa = (product as any).prix_affiche as { valeur: number; devise: string } | undefined
+                if (pa) {
+                  const format = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: pa.devise as any })
+                  return (
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-bold text-blue-600">
+                        {format.format(pa.valeur)}
+                      </span>
+                    </div>
+                  )
+                }
+                const cc = detectClientCountryCode()
+                const disp = determineDisplayPrice(cc, { priceEUR: product.price, priceDZD: product.priceDA })
+                const format = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: disp.devise })
+                return (
                   <div className="flex items-center gap-2">
                     <span className="text-lg font-bold text-blue-600">
-                      {formatPriceDA(product.priceDA)}
+                      {format.format(disp.valeur)}
                     </span>
-                    {product.originalPriceDA && product.originalPriceDA > product.priceDA && (
-                      <span className="text-sm text-gray-500 line-through">
-                        {formatPriceDA(product.originalPriceDA)}
-                      </span>
-                    )}
                   </div>
-                )}
-                
-                {/* EUR Price */}
-                {product.price && (
-                  <div className="flex items-center gap-2">
-                    <span className={`text-sm font-semibold ${product.priceDA ? 'text-gray-600' : 'text-lg text-gray-900'}`}>
-                      {formatPrice(product.price, 'EUR')}
-                    </span>
-                    {product.originalPrice && product.originalPrice > product.price && (
-                      <span className="text-xs text-gray-500 line-through">
-                        {formatPrice(product.originalPrice, 'EUR')}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </>
+                )
+              })()
             )}
           </div>
 
@@ -348,7 +343,7 @@ export function ProductCard({
               size="sm"
               onClick={handleAddToCart}
               loading={isLoading}
-              className="w-full flex items-center justify-center gap-1"
+              className="w-full flex items-center justify-center gap-1 cursor-pointer"
               variant={product.isFree ? "outline" : "default"}
             >
               {product.isFree ? (
@@ -359,7 +354,7 @@ export function ProductCard({
               ) : (
                 <>
                   <ShoppingCart className="h-4 w-4" />
-                  Ajouter au panier
+                  {isLoading ? 'Ajout...' : 'Ajouter au panier'}
                 </>
               )}
             </Button>

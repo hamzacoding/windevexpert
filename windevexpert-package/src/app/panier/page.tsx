@@ -543,15 +543,10 @@ export default function CartPage() {
                       <span>{formatPrice(cart.total)}</span>
                     </div>
                     
-                    <div className="flex justify-between text-gray-600">
-                      <span>TVA (20%)</span>
-                      <span>{formatPrice(cart.total * 0.2)}</span>
-                    </div>
-                    
                     <div className="border-t border-gray-200 pt-3">
                       <div className="flex justify-between text-lg font-bold text-gray-900">
-                        <span>Total</span>
-                        <span className="text-blue-600">{formatPrice(cart.total * 1.2)}</span>
+                        <span>Total TTC</span>
+                        <span className="text-blue-600">{formatPrice(cart.total)}</span>
                       </div>
                     </div>
                   </div>

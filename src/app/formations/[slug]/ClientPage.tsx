@@ -6,8 +6,7 @@ import { useSession } from 'next-auth/react'
 import { PublicLayout } from '@/components/layout/public-layout'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PaymentModal } from '@/components/ui/payment-modal'
 import Image from 'next/image'
 import { 
@@ -41,10 +40,10 @@ interface Formation {
   language?: string
   rating: number
   studentsCount: number
-  priceEuro: number
-  priceDA: number
-  lien_paiement?: string | null
+  priceEuro: number | null
+  priceDA: number | null
   prix_affiche?: { valeur: number; devise: 'USD' | 'EUR' | 'DZD' }
+  lien_paiement?: string | null
   image: string
   features: string[]
   objectives: string[]
@@ -63,9 +62,7 @@ interface Formation {
   }[]
 }
 
-
-
-export default function FormationDetailPage() {
+export default function FormationDetailClientPage() {
   const params = useParams()
   const router = useRouter()
   const { data: session, status } = useSession()
@@ -73,23 +70,22 @@ export default function FormationDetailPage() {
   const [loading, setLoading] = useState(true)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
-
-
   useEffect(() => {
     const fetchFormation = async () => {
       try {
         setLoading(true)
-        const formationId = params.id as string
-        const response = await fetch(`/api/courses/${formationId}`)
-        
-        if (!response.ok) {
-          throw new Error('Formation non trouvée')
+        const slug = params.slug as string
+        let response = await fetch(`/api/courses/slug/${slug}`)
+        if (response.ok) {
+          const data = await response.json()
+          setFormation(data)
+        } else {
+          response = await fetch(`/api/courses/${slug}`)
+          if (!response.ok) throw new Error('Formation non trouvée')
+          const data = await response.json()
+          setFormation(data)
         }
-        
-        const data = await response.json()
-        setFormation(data)
       } catch (error) {
-        console.error('Erreur lors du chargement de la formation:', error)
         setFormation(null)
       } finally {
         setLoading(false)
@@ -97,9 +93,8 @@ export default function FormationDetailPage() {
     }
 
     fetchFormation()
-  }, [params.id])
+  }, [params.slug])
 
-  // Always call hooks before any conditional returns to respect React's Rules of Hooks
   const heroImage = useMemo(
     () => (formation?.image ? formation.image : '/api/placeholder/800/450'),
     [formation?.image]
@@ -107,19 +102,13 @@ export default function FormationDetailPage() {
 
   const handleEnrollment = () => {
     if (!formation) return
-
-    // Vérifier l'état d'authentification
     if (status === 'loading') {
-      return // Attendre que l'état d'authentification soit chargé
+      return
     }
-
     if (!session) {
-      // Utilisateur non connecté - rediriger vers la page d'inscription
       router.push('/auth/signup')
       return
     }
-
-    // Utilisateur connecté - ouvrir la popup de paiement
     setShowPaymentModal(true)
   }
 
@@ -174,7 +163,6 @@ export default function FormationDetailPage() {
   return (
     <PublicLayout>
       <div className="min-h-screen bg-gray-50">
-        {/* Header avec breadcrumb */}
         <div className="bg-white border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
@@ -193,7 +181,6 @@ export default function FormationDetailPage() {
           </div>
         </div>
 
-        {/* Hero Section */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -237,8 +224,6 @@ export default function FormationDetailPage() {
                   </div>
                 </div>
               </div>
-              
-              {/* Couverture + Prix localisé */}
               <div className="space-y-4">
                 <div className="block">
                   <Image
@@ -249,6 +234,7 @@ export default function FormationDetailPage() {
                     className="w-full h-56 md:h-72 object-cover rounded-xl shadow-xl border border-white/20"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     priority
+                    unoptimized
                     onError={(e) => {
                       const img = e.currentTarget as HTMLImageElement
                       img.onerror = null
@@ -265,7 +251,7 @@ export default function FormationDetailPage() {
                     </div>
                     <span className="text-3xl font-extrabold text-blue-700">
                       {formation.prix_affiche?.valeur?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                      {" "}{formation.prix_affiche?.devise}
+                      {' '}{formation.prix_affiche?.devise}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
@@ -299,7 +285,7 @@ export default function FormationDetailPage() {
                     onClick={handleEnrollment}
                   >
                     <Play className="h-4 w-4 mr-2" />
-                    {status === 'loading' ? 'Chargement...' : (session ? 'Acheter maintenant' : 'S\'inscrire maintenant')}
+                    {status === 'loading' ? 'Chargement...' : (session ? 'Acheter maintenant' : "S'inscrire maintenant")}
                   </Button>
                 </div>
               </div>
@@ -307,12 +293,9 @@ export default function FormationDetailPage() {
           </div>
         </div>
 
-        {/* Contenu principal */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Colonne principale */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Description */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -330,7 +313,6 @@ export default function FormationDetailPage() {
                 </CardContent>
               </Card>
 
-              {/* Objectifs */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -350,7 +332,6 @@ export default function FormationDetailPage() {
                 </CardContent>
               </Card>
 
-              {/* Programme */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -380,9 +361,7 @@ export default function FormationDetailPage() {
               </Card>
             </div>
 
-            {/* Sidebar */}
             <div className="space-y-6">
-              {/* Prérequis */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">Prérequis</CardTitle>
@@ -399,7 +378,6 @@ export default function FormationDetailPage() {
                 </CardContent>
               </Card>
 
-              {/* Ce que vous obtiendrez */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center">
@@ -419,7 +397,6 @@ export default function FormationDetailPage() {
                 </CardContent>
               </Card>
 
-              {/* Action */}
               <Card className="bg-blue-50 border-blue-200">
                 <CardContent className="p-6 text-center">
                   <h3 className="font-bold text-lg mb-2">Prêt à commencer ?</h3>
@@ -431,7 +408,7 @@ export default function FormationDetailPage() {
                     onClick={handleEnrollment}
                   >
                     <Play className="h-4 w-4 mr-2" />
-                    {status === 'loading' ? 'Chargement...' : (session ? 'Acheter maintenant' : 'S\'inscrire maintenant')}
+                    {status === 'loading' ? 'Chargement...' : (session ? 'Acheter maintenant' : "S'inscrire maintenant")}
                   </Button>
                 </CardContent>
               </Card>
@@ -440,7 +417,6 @@ export default function FormationDetailPage() {
         </div>
       </div>
 
-      {/* Payment Modal */}
       <PaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}

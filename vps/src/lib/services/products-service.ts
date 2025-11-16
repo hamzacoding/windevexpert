@@ -71,6 +71,21 @@ export interface ProductsResponse {
   currentPage: number
 }
 
+function parseArray(input: any): any[] {
+  if (input == null) return []
+  if (Array.isArray(input)) return input
+  const s = String(input)
+  if (!s.trim()) return []
+  try {
+    const parsed = JSON.parse(s)
+    if (Array.isArray(parsed)) return parsed
+  } catch {}
+  return s
+    .split(',')
+    .map((x) => x.trim())
+    .filter(Boolean)
+}
+
 // Récupérer tous les produits avec pagination et filtres
 export async function getProducts(
   page: number = 1,
@@ -136,29 +151,53 @@ export async function getProducts(
     const totalPages = Math.ceil(totalCount / limit)
 
     return {
-      products: products.map(product => ({
-        ...product,
-        category: product.category_id ? {
-          id: product.category_id,
-          name: product.category_name
-        } : null,
-        enrollments: product.orderItems_count || 0,
-        reviewCount: product.reviews_count || 0,
-        rating: 4.5, // TODO: Calculer la moyenne des notes des reviews
-        // Parse JSON fields
-        features: product.features ? JSON.parse(product.features) : [],
-        keyBenefits: product.keyBenefits ? JSON.parse(product.keyBenefits) : [],
-        screenshots: product.screenshots ? JSON.parse(product.screenshots) : [],
-        compatibility: product.compatibility ? JSON.parse(product.compatibility) : [],
-        languages: product.languages ? JSON.parse(product.languages) : [],
-        technologies: product.technologies ? JSON.parse(product.technologies) : [],
-        pricingPlans: product.pricingPlans ? JSON.parse(product.pricingPlans) : [],
-        paymentMethods: product.paymentMethods ? JSON.parse(product.paymentMethods) : [],
-        supportTypes: product.supportTypes ? JSON.parse(product.supportTypes) : [],
-        testimonials: product.testimonials ? JSON.parse(product.testimonials) : [],
-        caseStudies: product.caseStudies ? JSON.parse(product.caseStudies) : [],
-        partners: product.partners ? JSON.parse(product.partners) : []
-      })),
+      products: products.map(product => {
+        try {
+          return {
+            ...product,
+            category: product.category_id ? {
+              id: product.category_id,
+              name: product.category_name
+            } : null,
+            enrollments: product.orderItems_count || 0,
+            reviewCount: product.reviews_count || 0,
+            rating: 4.5,
+            features: parseArray(product.features),
+            keyBenefits: parseArray(product.keyBenefits),
+            screenshots: parseArray(product.screenshots),
+            compatibility: parseArray(product.compatibility),
+            languages: parseArray(product.languages),
+            technologies: parseArray(product.technologies),
+            pricingPlans: parseArray(product.pricingPlans),
+            paymentMethods: parseArray(product.paymentMethods),
+            supportTypes: parseArray(product.supportTypes),
+            testimonials: parseArray(product.testimonials),
+            caseStudies: parseArray(product.caseStudies),
+            partners: parseArray(product.partners)
+          }
+        } catch (e) {
+          console.error('Product parse error id=', product?.id, e)
+          return {
+            ...product,
+            category: null,
+            enrollments: 0,
+            reviewCount: 0,
+            rating: 0,
+            features: [],
+            keyBenefits: [],
+            screenshots: [],
+            compatibility: [],
+            languages: [],
+            technologies: [],
+            pricingPlans: [],
+            paymentMethods: [],
+            supportTypes: [],
+            testimonials: [],
+            caseStudies: [],
+            partners: []
+          }
+        }
+      }),
       totalCount,
       totalPages,
       currentPage: page
@@ -197,19 +236,19 @@ export async function getProductById(id: string) {
       enrollments: product.orderItems_count || 0,
       reviewCount: product.reviews_count || 0,
       rating: 4.5, // TODO: Calculer la moyenne des notes des reviews
-      // Parse JSON fields
-      features: product.features ? JSON.parse(product.features) : [],
-      keyBenefits: product.keyBenefits ? JSON.parse(product.keyBenefits) : [],
-      screenshots: product.screenshots ? JSON.parse(product.screenshots) : [],
-      compatibility: product.compatibility ? JSON.parse(product.compatibility) : [],
-      languages: product.languages ? JSON.parse(product.languages) : [],
-      technologies: product.technologies ? JSON.parse(product.technologies) : [],
-      pricingPlans: product.pricingPlans ? JSON.parse(product.pricingPlans) : [],
-      paymentMethods: product.paymentMethods ? JSON.parse(product.paymentMethods) : [],
-      supportTypes: product.supportTypes ? JSON.parse(product.supportTypes) : [],
-      testimonials: product.testimonials ? JSON.parse(product.testimonials) : [],
-      caseStudies: product.caseStudies ? JSON.parse(product.caseStudies) : [],
-      partners: product.partners ? JSON.parse(product.partners) : []
+      // Parse fields tolerantly
+      features: parseArray(product.features),
+      keyBenefits: parseArray(product.keyBenefits),
+      screenshots: parseArray(product.screenshots),
+      compatibility: parseArray(product.compatibility),
+      languages: parseArray(product.languages),
+      technologies: parseArray(product.technologies),
+      pricingPlans: parseArray(product.pricingPlans),
+      paymentMethods: parseArray(product.paymentMethods),
+      supportTypes: parseArray(product.supportTypes),
+      testimonials: parseArray(product.testimonials),
+      caseStudies: parseArray(product.caseStudies),
+      partners: parseArray(product.partners)
     }
   } catch (error) {
     console.error('Erreur lors de la récupération du produit:', error)

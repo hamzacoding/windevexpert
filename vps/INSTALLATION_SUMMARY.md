@@ -13,14 +13,14 @@ Ce dossier contient tous les fichiers nécessaires pour installer WinDevExpert s
 | `setup-vps-complete.sh` | Installation complète manuelle | `./setup-vps-complete.sh domaine.com admin@email.com` |
 | `install-ubuntu.sh` | Script d'installation Ubuntu détaillé | `./install-ubuntu.sh` |
 
-### 🔧 Scripts de Configuration
+### 🔧 Scripts de configuration
 
 | Fichier | Description |
 |---------|-------------|
 | `setup-nginx.sh` | Configuration optimisée de Nginx avec SSL, caching, rate limiting |
 | `setup-pm2.sh` | Configuration de PM2 avec monitoring et auto-restart |
-| `backup.sh` | Scripts de backup complet (base de données, fichiers, configuration) |
-| `maintenance.sh` | Monitoring système et maintenance automatique |
+| `backup.sh` | Script de sauvegarde complet (base de données, fichiers, configuration) |
+| `maintenance.sh` | Surveillance du système et maintenance automatique |
 
 ### 🐳 Docker
 
@@ -42,7 +42,7 @@ Ce dossier contient tous les fichiers nécessaires pour installer WinDevExpert s
 
 | Fichier | Description |
 |---------|-------------|
-| `README.md` | Guide complet d'installation et configuration |
+| `README.md` | Guide complet d'installation et de configuration |
 | `INSTALLATION_SUMMARY.md` | Ce fichier - résumé rapide |
 
 ## 🎯 Méthodes d'Installation
@@ -87,10 +87,10 @@ chmod +x *.sh
 
 ### Serveur VPS Minimum
 - **OS**: Ubuntu 20.04 LTS ou 22.04 LTS
-- **RAM**: 2GB (4GB recommandé)
+- **RAM**: 2 Go (4 Go recommandé)
 - **CPU**: 2 cœurs
-- **Stockage**: 20GB (50GB recommandé)
-- **Réseau**: Ports 80, 443 ouverts
+- **Stockage**: 20 Go (50 Go recommandé)
+- **Réseau**: ports 80 et 443 ouverts
 
 ### Domaine
 - Nom de domaine pointant vers l'IP du VPS
@@ -124,7 +124,7 @@ STRIPE_SECRET_KEY="sk_test_votre-cle"
 # Gestion générale
 windevexpert {start|stop|restart|status|logs}
 
-# Backup
+# Sauvegarde
 windevexpert backup
 
 # Monitoring
@@ -137,7 +137,7 @@ windevexpert-update
 ### 3. Monitoring
 
 - **Prometheus**: `http://votre-domaine.com:9090`
-- **Grafana**: `http://votre-domaine.com:3001` (admin/admin123)
+- **Grafana**: `http://votre-domaine.com:3001` (admin — changez le mot de passe dès la première connexion)
 - **Health Check**: `http://votre-domaine.com/health`
 
 ## 🚀 Démarrage Rapide
@@ -154,7 +154,7 @@ windevexpert status
 curl https://monsite.com/health
 ```
 
-## 📈 Features Incluses
+## 📈 Fonctionnalités incluses
 
 ✅ **Installation Automatique** - Script one-line installer
 ✅ **SSL/TLS** - Certificats Let's Encrypt avec renouvellement auto
@@ -162,37 +162,37 @@ curl https://monsite.com/health
 ✅ **PostgreSQL** - Base de données avec configuration optimale
 ✅ **Redis** - Cache et sessions
 ✅ **PM2** - Process manager avec auto-restart
-✅ **Monitoring** - Prometheus + Grafana dashboard
-✅ **Backup** - Scripts de backup automatique (local + S3)
-✅ **Sécurité** - Firewall, fail2ban, headers de sécurité
-✅ **Performance** - Gzip, caching, optimisation Node.js
+✅ **Monitoring** - Prometheus + tableau de bord Grafana
+✅ **Sauvegarde** - Scripts de sauvegarde automatique (local + S3)
+✅ **Sécurité** - Pare-feu, fail2ban, en-têtes de sécurité
+✅ **Performance** - Gzip, mise en cache, optimisation Node.js
 ✅ **Logs** - Centralisation et rotation des logs
-✅ **Mise à Jour** - Scripts de mise à jour automatique
+✅ **Mises à jour** - Scripts de mise à jour automatique
 
 ## 🔒 Sécurité
 
-- Firewall UFW configuré
+- Pare-feu UFW configuré
 - Fail2ban pour protection SSH/HTTP
-- Headers de sécurité HTTP
-- Rate limiting sur les endpoints critiques
+- En-têtes de sécurité HTTP
+- Limitation de débit sur les endpoints critiques
 - SSL/TLS avec configuration moderne
 - Monitoring des tentatives de connexion
 
 ## 📊 Monitoring
 
-- CPU, mémoire, disque monitoring
-- Application health checks
-- Logs d'erreurs surveillance
+- Surveillance CPU, mémoire et disque
+- Vérifications de santé de l'application
+- Surveillance des logs d'erreurs
 - Alertes automatiques
-- Dashboard Grafana complet
+- Tableau de bord Grafana complet
 
-## 💾 Backup
+## 💾 Sauvegarde
 
-- Backup quotidien automatique
-- Backup hebdomadaire complet
-- Backup vers S3 (optionnel)
-- Retention 7 jours
-- Restoration facile
+- Sauvegarde quotidienne automatique
+- Sauvegarde hebdomadaire complète
+- Sauvegarde vers S3 (optionnel)
+- Rétention de 7 jours
+- Restauration facile
 
 ## 🆘 Support
 

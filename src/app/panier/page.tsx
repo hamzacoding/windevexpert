@@ -175,6 +175,7 @@ export default function CartPage() {
       if (response.ok) {
         await loadCart()
         await refreshCartCount()
+        try { localStorage.setItem('cart_updated', Date.now().toString()) } catch {}
         showFeedback('success', 'Panier vidé avec succès')
       } else {
         showFeedback('error', 'Erreur lors du vidage du panier')
@@ -235,10 +236,22 @@ export default function CartPage() {
   }
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(price)
+    const cc = (() => {
+      try {
+        const m = document.cookie.match(/(?:^|; )country_code=([^;]+)/)
+        if (m && m[1]) return decodeURIComponent(m[1]).slice(0,2).toUpperCase()
+      } catch {}
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+        if (tz.toLowerCase() === 'africa/algiers') return 'DZ'
+        const langs = (navigator.languages || [navigator.language]).filter(Boolean)
+        const found = langs.find(l => /-dz$/i.test(l))
+        if (found) return 'DZ'
+      } catch {}
+      return 'FR'
+    })()
+    const currency = cc === 'DZ' ? 'DZD' : 'EUR'
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency }).format(price)
   }
 
   if (loading) {
@@ -543,15 +556,10 @@ export default function CartPage() {
                       <span>{formatPrice(cart.total)}</span>
                     </div>
                     
-                    <div className="flex justify-between text-gray-600">
-                      <span>TVA (20%)</span>
-                      <span>{formatPrice(cart.total * 0.2)}</span>
-                    </div>
-                    
                     <div className="border-t border-gray-200 pt-3">
                       <div className="flex justify-between text-lg font-bold text-gray-900">
-                        <span>Total</span>
-                        <span className="text-blue-600">{formatPrice(cart.total * 1.2)}</span>
+                        <span>Total TTC</span>
+                        <span className="text-blue-600">{formatPrice(cart.total)}</span>
                       </div>
                     </div>
                   </div>
@@ -605,7 +613,7 @@ export default function CartPage() {
                   <div className="text-center mb-6">
                     <h3 className="text-xl font-bold text-green-800 mb-2">Paiement Local</h3>
                     <div className="text-3xl font-bold text-green-700 mb-2">
-                      {(cart.total * 150).toLocaleString()} DA
+                      {formatPrice(cart.total)}
                     </div>
                     <p className="text-sm text-green-600">Paiement en dinars algériens</p>
                   </div>
@@ -671,10 +679,7 @@ export default function CartPage() {
                       </div>
                       <div className="text-right">
                         <p className="font-medium text-gray-900">
-                          {formatPrice(item.product.price * item.quantity)}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {(item.product.price * item.quantity * 150).toLocaleString()} DA
+                          {formatPrice(item.price * item.quantity)}
                         </p>
                       </div>
                     </div>
@@ -684,7 +689,6 @@ export default function CartPage() {
                     <span>Total</span>
                     <div className="text-right">
                       <p className="text-blue-600">{formatPrice(cart.total)}</p>
-                      <p className="text-green-600 text-sm">{(cart.total * 150).toLocaleString()} DA</p>
                     </div>
                   </div>
                 </div>

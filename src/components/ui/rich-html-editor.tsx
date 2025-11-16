@@ -214,7 +214,7 @@ export function RichHtmlEditor({
         <div
           ref={editorRef}
           className={cn(
-            'rounded-md border bg-white p-3 text-sm leading-relaxed focus:outline-none',
+            'rich-html-editor__editable rounded-md border bg-white p-3 text-sm leading-relaxed focus:outline-none',
             disabled ? 'opacity-50 pointer-events-none' : 'outline-none'
           )}
           style={{ minHeight: height, overflowY: 'auto' }}

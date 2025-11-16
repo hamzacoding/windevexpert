@@ -8,6 +8,9 @@ import { PublicLayout } from '@/components/layout/public-layout'
 export const metadata: Metadata = {
   title: 'Blog - WindevExpert',
   description: 'Découvrez nos articles, tutoriels et actualités sur le développement web, mobile et les nouvelles technologies.',
+  alternates: {
+    canonical: '/blog',
+  },
 }
 
 // Mock data for blog posts
@@ -184,7 +187,7 @@ export default function BlogPage() {
                         <span>{new Date(post.publishedAt).toLocaleDateString('fr-FR')}</span>
                       </div>
                       
-                      <Link href={`/blog/${post.id}`}>
+                      <Link href={`/blog/${slugify(post.title)}`}>
                         <Button variant="outline" size="sm" className="rounded-xl border-gray-200 hover:border-purple-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 shadow-sm">
                           Lire la suite
                           <ArrowRight className="h-4 w-4 ml-1" />
@@ -246,7 +249,7 @@ export default function BlogPage() {
                       <span>{new Date(post.publishedAt).toLocaleDateString('fr-FR')}</span>
                     </div>
                     
-                    <Link href={`/blog/${post.id}`}>
+                    <Link href={`/blog/${slugify(post.title)}`}>
                       <Button variant="outline" size="sm" className="rounded-xl border-gray-200 hover:border-blue-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 shadow-sm">
                         Lire
                         <ArrowRight className="h-4 w-4 ml-1" />
@@ -311,4 +314,12 @@ export default function BlogPage() {
       </div>
     </PublicLayout>
   )
+}
+function slugify(input: string) {
+  return String(input || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-]/g, '')
+    .replace(/-+/g, '-')
 }

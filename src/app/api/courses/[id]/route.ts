@@ -2,6 +2,7 @@ export const runtime = 'nodejs'
 import { NextRequest, NextResponse } from 'next/server'
 import { queryOne, queryMany } from '@/lib/db'
 import { detectCountryCode, buildPrixAffiche } from '@/lib/geo'
+import { getCache, setCache } from '@/lib/cache'
 
 // Normalise une URL publique pour les images (corrige les backslashes, supprime /public, assure un leading slash)
 function normalizePublicUrl(url: any): string {
@@ -42,6 +43,13 @@ export async function GET(
 ) {
   try {
     const { id: courseId } = await params
+    const cacheKey = `course_id_${courseId}`
+    const cached = getCache<any>(cacheKey)
+    if (cached) {
+      const res = NextResponse.json(cached)
+      try { res.cookies.set('country_code', detectCountryCode(request), { maxAge: 60 * 60, path: '/', sameSite: 'lax' }) } catch {}
+      return res
+    }
 
     const hasPrismaEnv = !!process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('mysql://')
     if (hasPrismaEnv) {
@@ -84,6 +92,7 @@ export async function GET(
             priceAFR: formation.prix_afr != null ? Number(formation.prix_afr) : null,
           })
           const res = NextResponse.json({ ...formattedCourse, ...prixAffiche })
+          try { setCache(cacheKey, { ...formattedCourse, ...prixAffiche }, 60_000) } catch {}
           res.cookies.set('country_code', countryCode, { maxAge: 60 * 60, path: '/', sameSite: 'lax' })
           return res
         }
@@ -144,6 +153,7 @@ export async function GET(
           priceAFR: (course as any).priceAFR ?? null,
         })
         const res = NextResponse.json({ ...formattedCourse, ...prixAffiche })
+        try { setCache(cacheKey, { ...formattedCourse, ...prixAffiche }, 60_000) } catch {}
         res.cookies.set('country_code', countryCode, { maxAge: 60 * 60, path: '/', sameSite: 'lax' })
         return res
       } catch (err) {
@@ -200,6 +210,7 @@ export async function GET(
         priceAFR: formationRow.prix_afr != null ? Number(formationRow.prix_afr) : null,
       })
       const res = NextResponse.json({ ...formattedCourse, ...prixAffiche })
+      try { setCache(cacheKey, { ...formattedCourse, ...prixAffiche }, 60_000) } catch {}
       res.cookies.set('country_code', countryCode, { maxAge: 60 * 60, path: '/', sameSite: 'lax' })
       return res
     }
@@ -283,6 +294,7 @@ export async function GET(
       priceAFR: null,
     })
     const res = NextResponse.json({ ...formattedCourse, ...prixAffiche })
+    try { setCache(cacheKey, { ...formattedCourse, ...prixAffiche }, 60_000) } catch {}
     res.cookies.set('country_code', countryCode, { maxAge: 60 * 60, path: '/', sameSite: 'lax' })
     return res
 

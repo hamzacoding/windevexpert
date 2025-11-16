@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { X, Save, Eye } from 'lucide-react'
-import HtmlEditor from '@/components/ui/html-editor'
+import { RichHtmlEditor } from '@/components/ui/rich-html-editor'
+import { Tag, Globe, Building, Mail, Phone, MapPin, Calendar } from 'lucide-react'
 import { getDefaultContent, getDefaultTitle, hasDefaultContent } from '@/lib/services/default-page-content'
 
 interface PageContent {
@@ -288,13 +289,37 @@ export default function PageContentModal({ isOpen, onClose, onSave, content }: P
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Contenu *
                   </label>
-                  <HtmlEditor
+                  <div className="bg-gray-50 rounded-lg p-4 mb-2">
+                    <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+                      <Tag className="w-4 h-4" />
+                      Variables disponibles
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                      {pageVariables.map((variable) => {
+                        const IconComponent = variable.icon as any
+                        return (
+                          <button
+                            key={variable.key}
+                            onClick={() => insertVariableAtCaret(variable.key)}
+                            className="flex items-center gap-2 p-2 text-xs bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                            title={`Insérer ${variable.label}`}
+                          >
+                            <IconComponent className="w-3 h-3 text-gray-500" />
+                            <span className="truncate">{variable.label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <div className="mt-3 text-xs text-gray-500">
+                      Cliquez sur une variable pour l'insérer à la position du curseur.
+                    </div>
+                  </div>
+                  <RichHtmlEditor
                     value={formData.content}
                     onChange={(content) => setFormData(prev => ({ ...prev, content }))}
                     placeholder="Contenu HTML de la section..."
                     height={400}
-                    showVariables={true}
-                    variableType="page"
+                    uploadFolder="pages"
                   />
                 </div>
               </div>
@@ -342,4 +367,23 @@ export default function PageContentModal({ isOpen, onClose, onSave, content }: P
       </div>
     </div>
   )
+}
+const pageVariables = [
+  { key: '{{SITE_NAME}}', label: 'Nom du site', icon: Globe },
+  { key: '{{SITE_URL}}', label: 'URL du site', icon: Globe },
+  { key: '{{LOGO_URL}}', label: 'URL du logo', icon: Building },
+  { key: '{{CURRENT_YEAR}}', label: 'Année actuelle', icon: Calendar },
+  { key: '{{CONTACT_EMAIL}}', label: 'Email de contact', icon: Mail },
+  { key: '{{CONTACT_PHONE}}', label: 'Téléphone', icon: Phone },
+  { key: '{{CONTACT_ADDRESS}}', label: 'Adresse', icon: MapPin }
+]
+
+function insertVariableAtCaret(variable: string) {
+  try {
+    const editable = document.querySelector('.rich-html-editor__editable') as HTMLElement | null
+    if (editable) {
+      editable.focus()
+    }
+    document.execCommand('insertText', false, variable)
+  } catch {}
 }

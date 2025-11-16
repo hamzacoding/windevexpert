@@ -1,12 +1,17 @@
 import { Suspense } from 'react'
 import { ProductGrid } from '@/components/product/product-grid'
 import { prisma } from '@/lib/prisma'
+import { headers, cookies } from 'next/headers'
+import { buildPrixAffiche } from '@/lib/geo'
 import { PublicLayout } from '@/components/layout/public-layout'
 import { Loader2 } from 'lucide-react'
 
 export const metadata = {
   title: 'Produits - WindevExpert',
   description: 'Découvrez notre catalogue de produits WinDev, WebDev et WinDev Mobile : templates, composants, plugins et bien plus.',
+  alternates: {
+    canonical: '/produits',
+  },
 }
 
 async function getInitialProducts() {
@@ -53,9 +58,15 @@ async function getInitialProducts() {
       })
     ])
 
+    const hdrs = headers()
+    const cookieStore = cookies()
+    const headerCC = hdrs.get('x-country-code')?.slice(0,2).toUpperCase() || null
+    const cookieCC = cookieStore.get('country_code')?.value?.slice(0,2).toUpperCase() || null
+    const countryCode = headerCC || cookieCC || 'FR'
+
     // Transform products to match expected format
-  const transformedProducts = products.map(product => {
-    return {
+    const transformedProducts = products.map(product => {
+      return {
         id: product.id,
         name: product.name,
         slug: product.slug,
@@ -99,7 +110,8 @@ async function getInitialProducts() {
         })(),
         rating: 4.5,
         downloads: Math.floor(Math.random() * 1000) + 100,
-        isActive: product.status === 'ACTIVE'
+        isActive: product.status === 'ACTIVE',
+        ...buildPrixAffiche(countryCode, { priceEUR: product.price ?? null, priceDZD: product.priceDA ?? null })
       }
     })
 

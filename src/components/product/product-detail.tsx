@@ -46,6 +46,7 @@ import {
   Check
 } from 'lucide-react'
 import { Product } from '@/types/product'
+import { detectClientCountryCode, determineDisplayPrice } from '@/lib/client-geo'
 
 interface ProductDetailProps {
   product: Product
@@ -56,15 +57,27 @@ export function ProductDetail({ product, relatedProducts = [] }: ProductDetailPr
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [addStatus, setAddStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [isFavorite, setIsFavorite] = useState(false)
   const { addToCartWithUpdate } = useCart()
 
   const handleAddToCart = async () => {
+    setAddStatus('idle')
     setIsAddingToCart(true)
+    const start = performance.now?.() || Date.now()
     try {
-      await addToCartWithUpdate(product.id, quantity, product.name)
+      const q = Number.isFinite(quantity) ? Math.max(1, Math.floor(quantity)) : 1
+      await addToCartWithUpdate(product.id, q, product.name)
+      setAddStatus('success')
+    } catch (e) {
+      setAddStatus('error')
     } finally {
+      const elapsed = (performance.now?.() || Date.now()) - start
+      if (elapsed > 500) {
+        console.log(`[UI] Add to cart completed in ${Math.round(elapsed)}ms`) 
+      }
       setIsAddingToCart(false)
+      setTimeout(() => setAddStatus('idle'), 2000)
     }
   }
 
@@ -279,19 +292,26 @@ export function ProductDetail({ product, relatedProducts = [] }: ProductDetailPr
               {/* Price Card */}
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
                 {/* Price */}
-                <div className="text-center mb-6">
-                  <div className="text-4xl font-bold text-purple-600 mb-2">
-                    {product.isFree ? 'Gratuit' : `${product.price}€`}
-                  </div>
-                  {!product.isFree && product.originalPrice && product.originalPrice > product.price && (
-                    <div className="text-lg text-gray-500 line-through">
-                      {product.originalPrice}€
-                    </div>
-                  )}
-                  <div className="text-sm text-gray-600 mt-1">
-                    Licence COMMERCIALE • Support inclus
-                  </div>
+              <div className="text-center mb-6">
+                {product.isFree ? (
+                  <div className="text-4xl font-bold text-green-600 mb-2">Gratuit</div>
+                ) : (
+                  (() => {
+                    const pa = (product as any).prix_affiche as { valeur: number; devise: 'EUR'|'USD'|'DZD' } | undefined
+                    if (pa) {
+                      const fmt = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: pa.devise })
+                      return <div className="text-4xl font-bold text-purple-600 mb-2">{fmt.format(pa.valeur)}</div>
+                    }
+                    const cc = detectClientCountryCode()
+                    const disp = determineDisplayPrice(cc, { priceEUR: product.price, priceDZD: product.priceDA })
+                    const formatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: disp.devise })
+                    return <div className="text-4xl font-bold text-purple-600 mb-2">{formatter.format(disp.valeur)}</div>
+                  })()
+                )}
+                <div className="text-sm text-gray-600 mt-1">
+                  Licence COMMERCIALE • Support inclus
                 </div>
+              </div>
 
                 {/* Quantity */}
                 <div className="mb-4">
@@ -301,21 +321,47 @@ export function ProductDetail({ product, relatedProducts = [] }: ProductDetailPr
                   <div className="flex items-center justify-center">
                     <input
                       type="number"
-                      min="1"
-                      defaultValue="1"
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      min={1}
+                      step={1}
+                      value={quantity}
+                      onChange={(e) => {
+                        const val = Number(e.target.value)
+                        setQuantity(Number.isFinite(val) ? Math.max(1, Math.floor(val)) : 1)
+                      }}
+                      className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 {/* Add to Cart Button */}
                 <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg mb-3 transition-colors duration-200"
+                  className={`w-full cursor-pointer font-semibold py-3 px-6 rounded-lg mb-3 transition-all duration-200 flex items-center justify-center gap-2 ${
+                    addStatus === 'success' ? 'bg-green-600 hover:bg-green-700 text-white' : addStatus === 'error' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  }`}
                   size="lg"
+                  loading={isAddingToCart}
+                  onClick={handleAddToCart}
                 >
-                  <ShoppingCart className="h-5 w-5 mr-2" />
-                  Ajouter au panier
+                  {addStatus === 'success' ? (
+                    <>
+                      <CheckCircle className="h-5 w-5" />
+                      Ajouté
+                    </>
+                  ) : addStatus === 'error' ? (
+                    <>
+                      <AlertCircle className="h-5 w-5" />
+                      Réessayer
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="h-5 w-5" />
+                      Ajouter au panier
+                    </>
+                  )}
                 </Button>
+                {addStatus === 'error' && (
+                  <p className="text-sm text-red-600 mt-1">Une erreur est survenue. Réessai automatique en cours...</p>
+                )}
 
                 {/* Wishlist and Share */}
                 <div className="flex gap-2">

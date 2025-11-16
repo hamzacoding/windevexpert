@@ -15,8 +15,9 @@ export async function GET(request: NextRequest) {
     }
 
     const count = await CartService.getCartItemCount(session?.user?.id, sessionId || undefined)
-    
-    return NextResponse.json({ count })
+    const res = NextResponse.json({ count })
+    res.headers.set('Cache-Control', 'no-store')
+    return res
   } catch (error) {
     console.error('Error fetching cart count:', error)
     return NextResponse.json({ count: 0 })
